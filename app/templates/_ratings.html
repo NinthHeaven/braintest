@@ -1,0 +1,7 @@
+<table>
+    <tr valign="top">
+        <td><img src="{{ rating.rater.avatar(38) }}"></td>
+        <td>{{ rating.rater.username }} rated this image: {{ rating.rating }}<br>
+        {% if rating.notes %}<strong>Notes: {{ rating.notes }} </strong> {% endif %}</td>
+    </tr>
+</table>

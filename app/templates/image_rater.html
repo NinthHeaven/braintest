@@ -1,0 +1,27 @@
+{% extends "base.html" %} 
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <table>
+        <tr valign="top">
+            <td><img src="/static/uploads/{{filename}}" width="200" height="200"></td>
+            <td>
+                <h1>Image name: {{ filename }}</h1>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(form) }}
+                    </div>
+                </div>
+                <p>
+                    <a href="{{ url_for('uploader') }}">Rate more images</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <p> The following users rated this image: </p>
+    {% for rating in image_ratings %}
+        {% include '_ratings.html' %}
+    {% endfor %}
+ {% endblock %}   
+
