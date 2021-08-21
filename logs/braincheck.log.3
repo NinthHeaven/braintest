@@ -1,0 +1,126 @@
+2021-08-14 03:16:25,884 ERROR: Exception on /login [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "C:\Users\penie\brain_test\app\routes.py", line 44, in login
+    return render_template('login.html', form=form)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 148, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1068, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 997, in get_template
+    return self._load_template(name, globals)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 958, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\loaders.py", line 125, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 59, in get_source
+    return self._get_source_fast(environment, template)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 95, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: login.html
+2021-08-14 03:17:46,901 ERROR: Exception on /login [POST] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 2741, in _determine_joins
+    self.primaryjoin = join_condition(
+  File "<string>", line 2, in join_condition
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\sql\selectable.py", line 1196, in _join_condition
+    raise exc.NoForeignKeysError(
+sqlalchemy.exc.NoForeignKeysError: Can't find any foreign key relationships between 'usernames' and 'pic_ratings'.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "C:\Users\penie\brain_test\app\routes.py", line 33, in login
+    user = Usernames.query.filter_by(username=form.username.data).first()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 550, in __get__
+    mapper = orm.class_mapper(type)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\base.py", line 436, in class_mapper
+    mapper = _inspect_mapped_class(class_, configure=configure)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\base.py", line 415, in _inspect_mapped_class
+    mapper._check_configure()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 1873, in _check_configure
+    _configure_registries({self.registry}, cascade=True)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 3384, in _configure_registries
+    _do_configure_registries(registries, cascade)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 3423, in _do_configure_registries
+    mapper._post_configure_properties()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 1890, in _post_configure_properties
+    prop.init()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\interfaces.py", line 222, in init
+    self.do_init()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 2139, in do_init
+    self._setup_join_conditions()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 2235, in _setup_join_conditions
+    self._join_condition = jc = JoinCondition(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 2630, in __init__
+    self._determine_joins()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 2763, in _determine_joins
+    util.raise_(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
+    raise exception
+sqlalchemy.exc.NoForeignKeysError: Could not determine join condition between parent/child tables on relationship Usernames.ratings - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2021-08-14 03:19:18,500 ERROR: Exception on /login [POST] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1770, in _execute_context
+    self.dialect.do_execute(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\default.py", line 717, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: usernames
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "C:\Users\penie\brain_test\app\routes.py", line 33, in login
+    user = Usernames.query.filter_by(username=form.username.data).first()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\query.py", line 2760, in first
+    return self.limit(1)._iter().first()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\query.py", line 2844, in _iter
+    result = self.session.execute(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\session.py", line 1689, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1582, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1451, in _execute_clauseelement
+    ret = self._execute_context(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1813, in _execute_context
+    self._handle_dbapi_exception(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1994, in _handle_dbapi_exception
+    util.raise_(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
+    raise exception
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1770, in _execute_context
+    self.dialect.do_execute(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\default.py", line 717, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: usernames
+[SQL: SELECT usernames.id AS usernames_id, usernames.username AS usernames_username, usernames.pass_hash AS usernames_pass_hash, usernames.about_me AS usernames_about_me, usernames.last_seen AS usernames_last_seen 
+FROM usernames 
+WHERE usernames.username = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('admin', 1, 0)]
+(Background on this error at: http://sqlalche.me/e/14/e3q8)
