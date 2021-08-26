@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <style>
+        .scan-list {
+        font-family: sans-serif;
+        border-collapse: collapse;
+        font-size: 0.9em;
+        font-weight: bold;
+        margin: 25px 0;
+        width: 100%;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .scan-list thead tr {
+            background-color: #4a75d1;
+            color: #ffffff;
+            text-align: left
+
+        }
+        
+        .scan-list td, .scan-list th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px 8px;
+        }
+
+        .scan-list tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+        
+        .scan-list tbody tr:nth-child(even) {
+        background-color: #d2dcfc;
+        }
+
+        .scan-list tbody tr:last-of-type {
+            border-bottom: 2px solid #0e055f;
+        }
+    </style>
+    <h1>Images</h1>
+    <p><strong>Subject: </strong> {{ subject }}</p>
+    <br>
+    <p><strong>In order to see the images, please store them in the subjects subfolder inside the static directory.</strong></p>
+    <p>Rate the following images below: </p>
+    <table class="scan-list">
+        <thead>
+            <tr>
+                <th>Image Name</th>
+                <th>Ratings</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subj_scan in subject_scans %}
+                <tr>
+                    <td><a href="{{ url_for('scan_rater', subject=subject, filename=subj_scan) }}">{{subj_scan}}</a></td>
+                    {% for scan_type, scene, count in scan_ratings %}
+                        {% if scan_type in subj_scan and ('scene' + scene) in subj_scan %}<td>{{ count }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        <tbody>
+    </table>
+{% endblock %}

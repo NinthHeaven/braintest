@@ -24,6 +24,9 @@ class Usernames(db.Model, UserMixin):
     # Admin and Bot can broadcast messages
     broadcasts = db.relationship('Broadcasts', backref='mod', lazy='dynamic')
 
+    # Scan ratings (will replace the ratings table later)
+    scan_ratings = db.relationship('ScanRater', backref='scan_rater', lazy = 'dynamic')
+
     # Password hash function for security
     def set_password(self, password):
         self.pass_hash = generate_password_hash(password)
@@ -56,6 +59,26 @@ class Ratings(db.Model):
 
     def __repr__(self):
         return '<Rating {}>'.format(self.rating)
+
+class ScanRater(db.Model):
+
+    __tablename__ = 'scan_ratings'
+
+    id = db.Column(db.Integer, primary_key=True)
+    subj_name = db.Column(db.String, index=True)
+    scan_type = db.Column(db.String, index = True)
+    scene = db.Column(db.String, index=True)
+    distort_notes = db.Column(db.String, index=True)
+    SBF_corr_notes = db.Column(db.String, index=True)
+    full_brain_notes = db.Column(db.String, index=True)
+    CIFTI_notes = db.Column(db.String, index=True)
+    dropout_notes = db.Column(db.String, index=True)
+    rating = db.Column(db.Integer, index=True)
+    notes = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('usernames.id'))
+
+    def __repr__(self):
+        return '<Rating of Scan {}>'.format(self.rating)
 
 class Broadcasts(db.Model):
 
