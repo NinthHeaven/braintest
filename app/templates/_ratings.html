@@ -1,7 +1,12 @@
 <table>
     <tr valign="top">
         <td><img src="{{ rating.scan_rater.avatar(38) }}"></td>
-        <td>{{ rating.scan_rater.username }} rated this image: {{ rating.rating }}<br>
-        {% if rating.notes %}<strong>Notes: {{ rating.notes }} </strong> {% endif %}</td>
+        <td>{{ rating.scan_rater.username }} rated this image: {{ rating.rating }}<br><br>
+        {% if rating.distort_okay == 'yes' %}<p>Distortion correction okay</p>{% else %}<p>Problems with distortion correctness</p><p><strong>Distortion notes: </strong>{{ rating.distort_notes }}</p>{% endif %}<br>
+        {% if rating.SBF_corr == 'no' %}<p>No SBF corruption</p>{% else %}<p>SBF Corruption Noted</p><p><strong>SBF notes: </strong>{{ rating.SBF_corr_notes }}</p> {% endif %} <br>
+        {% if rating.full_brain_cov == 'yes' %}<p>Full brain coverage present</p>{% else %}<p>Problems with full brain coverage</p><p><strong>Coverage notes: </strong>{{ rating.full_brain_notes }}</p> {% endif %} <br>
+        {% if rating.CIFTI_map == 'yes' %}<p>CIFTI mapping looks typical</p>{% else %}<p>CIFTI mapping is atypical</p><p><strong>CIFTI mapping notes: </strong>{{ rating.CIFTI_notes }}</p> {% endif %} <br>
+        {% if rating.dropout == 'no' %}<p>No/little dropout detected</p>{% else %}<p>Concerning amounts of dropout</p><p><strong>Dropout notes: </strong>{{ rating.dropout_notes }}</p> {% endif %} <br>       
+        {% if rating.notes %}<strong>Additional Notes: {{ rating.notes }} </strong> {% endif %}</td>
     </tr>
 </table>

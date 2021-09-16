@@ -41,16 +41,16 @@ class EditProfile(FlaskForm):
 
 class ImgRating(FlaskForm):
     #username = StringField('Username', validators=[DataRequired()])
-    distort_okay = RadioField(u'Is distortion correction ok? (i.e., does the location of the gray/white matter transition in the fMRI (SBRef) image align nicely with the white matter surface (green) outline?)',
-                               choices=[('yes', 'Yes'), ('no', 'No')], validators=[DataRequired()])
-    SBF_corruption = RadioField(u'Is there SBRef corruption? (i.e., any artifacts that look abnormal, e.g., dark lines across SBRef indicate slice “dropout” due to motion?)',
-                                 choices=[('yes', 'Yes'), ('no', 'No')], validators=[DataRequired()])
-    full_brain_coverage = RadioField(u'Is there full brain coverage? (I.e., is all of the brain, including the cerebellum, captured within the “final fMRI mask” (fuchsia) outline? In “scene 2”, this will be clear with areas where the cyan outline is present, but surrounding nothing, indicating regions where the SBRef has been masked by the “final fMRI mask”. Quantify % of missing brain region to nearest 20%; if less than 10% missing, call it “0%”; if 90% or more missing, call it “100%"',
-                                      choices=[('yes', 'Yes'), ('no', 'No')], validators=[DataRequired()])
-    CIFTI_map_typ = RadioField(u'Does mapping of CIFTI onto surface/volume look “reasonable/typical”?',
-                                choices=[('yes', 'Yes'), ('no', 'No')], validators=[DataRequired()])
-    dropout = RadioField(u'Is there dropout (i.e., dark areas within fuchsia outline)?',
-                          choices=[('yes', 'Yes'), ('no', 'No')], validators=[DataRequired()])
+    distort_okay = SelectField('Is distortion correction ok? (i.e., does the location of the gray/white matter transition in the fMRI (SBRef) image align nicely with the white matter surface (green) outline?). If not, please elaborate.',
+                               choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
+    SBF_corruption = SelectField('Is there SBRef corruption? (i.e., any artifacts that look abnormal, e.g., dark lines across SBRef indicate slice “dropout” due to motion?). If so, please elaborate.',
+                                 choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
+    full_brain_coverage = SelectField('Is there full brain coverage? (I.e., is all of the brain, including the cerebellum, captured within the “final fMRI mask” (fuchsia) outline? In “scene 2”, this will be clear with areas where the cyan outline is present, but surrounding nothing, indicating regions where the SBRef has been masked by the “final fMRI mask”. Quantify % of missing brain region to nearest 20%; if less than 10% missing, call it “0%”; if 90% or more missing, call it “100%". If not, please elaborate.',
+                                      choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
+    CIFTI_map_typ = SelectField('Does mapping of CIFTI onto surface/volume look “reasonable/typical”? If not, please elaborate.',
+                                choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
+    dropout = SelectField('Is there dropout (i.e., dark areas within fuchsia outline)? If so, please elaborate.',
+                          choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
     notes = StringField('Any additional notes about the scan?')
     rating = RadioField('Quality Rating?', choices=[('good', '0 (Good)'), ('okay', '1 (Okay)'), ('bad', '2 (Bad)'), ('severe', '3 (Severe)')])
     
@@ -63,6 +63,9 @@ class ImgRating(FlaskForm):
 
 
     submit = SubmitField('Submit Rating')
+
+class SceneChoose(FlaskForm):
+    scene = SelectField('Select Scene', choices=[('both', 'Both'), ('one', '1'), ('two', '2')])
 
 # MAKE THIS AVAILABLE TO ADMIN ONLY!!!!!
 class Notifications(FlaskForm):

@@ -2,13 +2,14 @@ from flask import render_template, redirect, url_for, request, flash, send_from_
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql.elements import Null
 from werkzeug.urls import url_parse
-from werkzeug.utils import secure_filename
+#from werkzeug.utils import secure_filename
 from app import app, db
-from app.forms import ImgRating, Login, Register, EditProfile, Notifications, ImgUploader
+from app.forms import ImgRating, Login, Register, EditProfile, Notifications, ImgUploader, SceneChoose
 from app.models import Usernames, Ratings, Broadcasts, ScanRater
 from datetime import datetime
 import os
 import re
+files = os.listdir('app/static/subjects/HCD_wb1.4.2.pngs')
 # Constantly update the time a user accesses the page
 @app.before_request
 def before_request():
@@ -98,14 +99,15 @@ def logs():
     return render_template('logs.html')
 
 
-
+# TODO: WORK ON THESE NEXT THREEE FUNCTIONS
+# TODO: DELETE SCENE FROM MODELS
+# TODO: RATER AND RATE_SCAN FUNCTIONS
 
 
 # THIS WILL BE NEW RATER FUNC, DELETE ANY DUPLICATES
 @app.route('/rater', methods=['GET', 'POST'])
 @login_required
 def rater():
-    files = os.listdir('app/static/subjects/HCD_wb1.4.2.pngs-selected/')
     subj_list = set()
     scantype_list = []
     # Get a list of the subjects and also the scan types (will be used for accessing other scans)
@@ -132,43 +134,71 @@ def rater():
 @login_required
 def subject_scans(subject):
     # Redundant line of code (probably will fix later)
-    files = os.listdir('app/static/subjects/HCD_wb1.4.2.pngs-selected/')
-    subject_scans = [scan for scan in files if subject in scan]
-    subj_ratings = db.session.query(ScanRater.scan_type, ScanRater.scene, db.func.count()).filter_by(subj_name=subject).\
-        group_by(ScanRater.scan_type, ScanRater.scene).all()
+    subj_ratings = db.session.query(ScanRater.scan_type, db.func.count()).filter_by(subj_name=subject).\
+        group_by(ScanRater.scan_type).all()
+
+    # Depict scan names (to fix the rater page)
+    scan_names = set()
+
+    for file in files:
+        scan_names.add(file[file.find('R_')+2 : file.find('.fM')])
+
+    print(scan_names)
 
     # sanity check for printing the scans
-    for scan_type, scene, count in subj_ratings:
-        print(scan_type, scene, count)
+    for scan_type, count in subj_ratings:
+        print(scan_type, count)
 
-    return render_template('subject_scan.html', subject=subject, subject_scans=subject_scans, scan_ratings=subj_ratings)
+
+    return render_template('subject_scan.html', subject=subject, scans=scan_names, scan_ratings=subj_ratings)
 
 # FIXED
 @app.route('/scan_rater/<subject>/<filename>', methods=['GET', 'POST'])
 @login_required
 def scan_rater(subject, filename):
     # Remove the file ending to just get the DBSeries_desc
-    scan = filename[filename.find('R_')+2 : filename.find('.fM')]
+    scan = filename
+    print(scan)
     
+    images = []
+    for file in files:
+        if subject in file and scan in file:
+            images.append(file)
+
+    print(images)
     # Add scene to the database
     scene = 0
     if 'scene1' in filename:
         scene = 1
     elif 'scene2' in filename:
         scene = 2
-    scan_ratings = db.session.query(ScanRater).filter_by(subj_name=subject, scan_type=scan, scene=scene)
+    scan_ratings = db.session.query(ScanRater).filter_by(subj_name=subject, scan_type=scan)
     form = ImgRating()
+    scene_form = SceneChoose()
     if form.validate_on_submit():
         user = Usernames.query.filter_by(username=current_user.username).first_or_404()
-        scan_rating = ScanRater(subj_name=subject, scan_type=scan, rating=form.rating.data, 
-                                distort_notes=form.distort_okay.data, SBF_corr_notes=form.SBF_corruption.data,
-                                full_brain_notes=form.full_brain_coverage.data, CIFTI_notes = form.CIFTI_map_typ.data,
-                                dropout_notes=form.dropout.data, notes=form.notes.data, scan_rater=user, scene=scene)
+        scan_rating = ScanRater(subj_name=subject, scan_type=scan, rating=form.rating.data, distort_okay=form.distort_okay.data,
+                                distort_notes=form.distort_notes.data, SBF_corr=form.SBF_corruption.data, SBF_corr_notes=form.SBF_notes.data,
+                                full_brain_cov=form.full_brain_coverage.data, full_brain_notes=form.full_brain_notes.data, 
+                                CIFTI_map=form.CIFTI_map_typ.data, CIFTI_notes = form.CIFTI_notes.data, dropout=form.dropout.data,
+                                dropout_notes=form.dropout_notes.data, notes=form.notes.data, scan_rater=user)
         db.session.add(scan_rating)
         db.session.commit()
         flash('Thanks for rating!')
         return redirect(url_for('scan_rater', subject=subject, filename=filename))
-    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene)
+    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene, scene_form=scene_form, images=images)
+
+# ONLY FOR SPECIFIC ACCESS
+@app.route('/download')
+@login_required
+def download():
+    import csv 
+    file = open('ratings.csv', 'w')
+    csv = csv.writer(file)
+    ratings_dat = db.session.query(ScanRater).all()
+    [csv.writerow([getattr(curr, column.name) for column in ScanRater.__mapper__.columns]) for curr in ratings_dat]
+    file.close()
+    return redirect(url_for('home_page'))
 
 
 @app.route('/logout')

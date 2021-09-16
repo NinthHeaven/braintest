@@ -1,4 +1,4 @@
-2021-08-17 07:01:04,901 ERROR: Exception on /uploader [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+2021-08-28 01:10:13,902 ERROR: Exception on /scan_rater/HCD0001305/HCD0001305_V1_MR_rfMRI_REST1_AP.fMRIQC.wb.scene1.png [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
 Traceback (most recent call last):
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
     response = self.full_dispatch_request()
@@ -10,26 +10,40 @@ Traceback (most recent call last):
     return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 106, in uploader
-    return render_template('uploader.html', form=form, files=files)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 148, in render_template
-    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1068, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 997, in get_template
-    return self._load_template(name, globals)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 958, in _load_template
-    template = self.loader.load(self, name, self.make_globals(globals))
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\loaders.py", line 137, in load
-    code = environment.compile(source, name, filename)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 757, in compile
-    self.handle_exception(source=source_hint)
+  File "C:\Users\penie\brain_test\app\routes.py", line 171, in scan_rater
+    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 147, in render_template
+    return _render(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 128, in _render
+    rv = template.render(context)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
   File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
     raise rewrite_traceback_stack(source=source)
-  File "C:\Users\penie\brain_test\app\templates\uploader.html", line 15, in template
-    <img src="{{ url_for('static', filename=uploads/{{file}}) }}" width="200" height="200">
-jinja2.exceptions.TemplateSyntaxError: expected token ':', got '}'
-2021-08-17 07:01:51,067 ERROR: Exception on /uploader [POST] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 2, in top-level template code
+    {% import 'bootstrap/wtf.html' as wtf %}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 1, in top-level template code
+    {% extends "bootstrap/base.html" %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
+    {% block body -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
+    {% block content -%}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 51, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 101, in block 'app_content'
+    <form action="{{ url_for('scan_rater') }}" method='POST'>
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\helpers.py", line 338, in url_for
+    return appctx.app.handle_url_build_error(error, endpoint, values)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\helpers.py", line 325, in url_for
+    rv = url_adapter.build(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\werkzeug\routing.py", line 2305, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.BuildError: Could not build url for endpoint 'scan_rater'. Did you forget to specify values ['filename', 'subject']?
+2021-09-16 06:14:02,470 ERROR: Exception on /scan_rater/HCD2993079/tfMRI_CARIT_AP [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
 Traceback (most recent call last):
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
     response = self.full_dispatch_request()
@@ -41,87 +55,34 @@ Traceback (most recent call last):
     return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 104, in uploader
-    form.image.data.save(os.path.join('app/static/uploads', uploaded_img))
-  File "c:\users\penie\brain_test\venv\lib\site-packages\werkzeug\datastructures.py", line 3013, in save
-    dst = open(dst, "wb")
-FileNotFoundError: [Errno 2] No such file or directory: 'app/static/uploads\\cat.jpg'
-2021-08-17 07:03:04,199 ERROR: Exception on /uploader [POST] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 104, in uploader
-    form.image.data.save(os.path.join('app/static/uploads', uploaded_img))
-  File "c:\users\penie\brain_test\venv\lib\site-packages\werkzeug\datastructures.py", line 3013, in save
-    dst = open(dst, "wb")
-FileNotFoundError: [Errno 2] No such file or directory: 'app/static/uploads\\cat.jpg'
-2021-08-17 07:03:29,938 ERROR: Exception on /uploader [POST] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 104, in uploader
-    form.image.data.save(os.path.join('app/static/uploads', uploaded_img))
-  File "c:\users\penie\brain_test\venv\lib\site-packages\werkzeug\datastructures.py", line 3013, in save
-    dst = open(dst, "wb")
-FileNotFoundError: [Errno 2] No such file or directory: 'app/static/uploads\\cat.jpg'
-2021-08-17 07:04:06,622 ERROR: Exception on /uploader [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 100, in uploader
-    files = os.listdir('app/static/uploads')
-FileNotFoundError: [WinError 3] The system cannot find the path specified: 'app/static/uploads'
-2021-08-17 07:07:38,874 ERROR: Exception on /uploader [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 100, in uploader
-    files = os.listdir('app/static/uploads')
-FileNotFoundError: [WinError 3] The system cannot find the path specified: 'app/static/uploads'
-2021-08-17 07:08:22,750 ERROR: Exception on /uploader [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 100, in uploader
-    files = os.listdir('/app/static/uploads')
-FileNotFoundError: [WinError 3] The system cannot find the path specified: '/app/static/uploads'
+  File "C:\Users\penie\brain_test\app\routes.py", line 188, in scan_rater
+    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene, scene_form=scene_form, images=images)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 147, in render_template
+    return _render(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 128, in _render
+    rv = template.render(context)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 2, in top-level template code
+    {% import 'bootstrap/wtf.html' as wtf %}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 1, in top-level template code
+    {% extends "bootstrap/base.html" %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
+    {% block body -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
+    {% block content -%}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 51, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 196, in block 'app_content'
+    {% include '_ratings.html' %}
+  File "C:\Users\penie\brain_test\app\templates\_ratings.html", line 5, in top-level template code
+    {% if ratings.distort_okay.data == 'yes' %}<p>Distortion correction okay</p>{% else %}<p>Problems with distortion correctness</p>{% endif %}<br>
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 474, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'ratings' is undefined

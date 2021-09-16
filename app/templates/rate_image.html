@@ -5,7 +5,7 @@
     <style>
         /* Button used to open the contact form - fixed at the bottom of the page */
         .open-button {
-        background-color: #555;
+        background-color: rgb(89, 103, 231);
         color: white;
         padding: 16px 20px;
         border: none;
@@ -17,7 +17,7 @@
         /* The popup form - hidden by default */
         .form-popup {
         display: none;
-        position: fixed;
+        position: dynamic;
         bottom: 0;
         right: 15px;
         border: 3px solid #f1f1f1;
@@ -58,6 +58,14 @@
         opacity: 0.8;
         }
 
+        select {
+        width: 100%;
+        padding: 16px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #f1f1f1;
+        }
+
         /* Add a red background color to the cancel button */
         .form-container .cancel {
         background-color: red;
@@ -72,66 +80,123 @@
             max-width: 100%;
             height: auto;
         }
+
+        .distort_notes, .SBF_notes, .full_brain_notes, .CIFTI_notes, .dropout_notes {
+            display: none;
+        }
+        .distort_label {
+            display: none;
+        }
     </style>
     <h1>Scan Information</h1>
     <p><strong>Subject:</strong> {{ subject }}</p>
     <p><strong>Scan:</strong> {{ scan }}</p>
-    <p><strong>Scene: </strong> {{ scene }} (will be toggable)</p>
-    <img src="/static/subjects/HCD_wb1.4.2.pngs-selected/{{filename}}">
+    <p><strong>Scene: </strong> {{ scene_form.hidden_tag() }}
+                                {{ scene_form.scene(onclick="changeSceneView()") }} (will be toggable)</p>
+    {% for image in images %}
+        <img src="/static/subjects/HCD_wb1.4.2.pngs/{{image}}" id="testImages">
+    {% endfor %}
     <!-- Button trigger modal -->
     <br>
     <br>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    <button type="button" class="open-button" onclick='openForm()'>
         Rate this scan
     </button>
     <hr>
     <a href="{{ url_for('rater') }}">Rate more images</a>
   
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Scan Evaluation Form</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                {{ form.distort_okay.label }}
-                {{ form.distort_okay(onchange="showText()") }}
-                {{ form.distort_notes() }}
-                {{ form.SBF_corruption.label }}
-                {{ form.SBF_corruption() }}
-                {{ form.full_brain_coverage.label }}
-                {{ form.full_brain_coverage() }}
-                {{ form.CIFTI_map_typ.label }}
-                {{ form.CIFTI_map_typ() }}
-                {{ form.dropout.label }}
-                {{ form.dropout() }}
-                {{ form.notes.label }} <br>
-                {{ form.notes() }} <br>
-                {{ form.rating.label }}
-                {{ form.rating() }}
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-        </div>
+    <!-- No longer a modal, but a buggy popup. FIX LATER -->
+    <div class='form-popup' id='scan_rater'>
+        <form action="/scan_rater/{{subject}}/{{filename}}" class='form-container' method='POST'>
+            {{ form.hidden_tag() }}
+            {{ form.distort_okay.label }}
+            {{ form.distort_okay() }} <br>
+            {{ form.distort_notes.label(class_='distort_label') }} 
+            {{ form.distort_notes(class_='distort_notes') }}
+            {{ form.SBF_corruption.label }}
+            {{ form.SBF_corruption() }}
+            {{ form.SBF_notes(class_='SBF_notes') }}
+            {{ form.full_brain_coverage.label }}
+            {{ form.full_brain_coverage() }}
+            {{ form.full_brain_notes(class_='full_brain_notes') }}
+            {{ form.CIFTI_map_typ.label }}
+            {{ form.CIFTI_map_typ() }}
+            {{ form.CIFTI_notes(class_='CIFTI_notes') }}
+            {{ form.dropout.label }}
+            {{ form.dropout() }}
+            {{ form.dropout_notes(class_='dropout_notes') }}
+            {{ form.notes.label }} <br>
+            {{ form.notes() }} <br>
+            {{ form.rating.label }}
+            {{ form.rating() }}
+            {{ form.submit() }}
+            <button type='button' class='btn cancel' onclick='closeForm()'>Close</button>
+        </form>
     </div>
-      
+    
+<!-- Using basic js to dynamically change form. Switch to jQuery for a more succint code-->  
     <script>
-        function showText() {
-            var distort = document.getElementById('distort_okay').value
-            if (distort == 'No'){
-                document.getElementById("distort_notes").disabled = false;
-            }
-            else{
-                document.getElementById("distort_notes").disabled = true;
+        /// for opening and closing the form (testing)
+        function openForm() {
+            document.getElementById('scan_rater').style.display = 'block';
+        }
+
+        function closeForm() {
+            document.getElementById('scan_rater').style.display = 'none';
+        }
+
+        /// dynamic handling of additional notes (based on what is selected in the dropdown)
+        let distort_select = document.getElementById('distort_okay');
+        let SBF_select = document.getElementById('SBF_corruption');
+        let full_brain_select = document.getElementById('full_brain_coverage');
+        let CIFTI_select = document.getElementById('CIFTI_map_typ');
+        let dropout_select = document.getElementById('dropout');
+
+        distort_select.onchange = function() {
+            distort = distort_select.value;
+            
+            if (distort == 'no') {
+                document.getElementById('distort_notes').style.display = 'block';
+                document.getElementById('distort_label').style.display = 'block';
+            } else {
+                document.getElementById('distort_notes').style.display = 'none';
             }
         }
-        showText()
+
+        SBF_select.onchange = function() {
+            SBF = SBF_select.value;
+
+            if (SBF == 'yes') {
+                document.getElementById('SBF_notes').style.display = 'block';
+            }
+        }
+
+        full_brain_select.onchange = function() {
+            full_brain = full_brain_select.value;
+
+            if(full_brain == 'no') {
+                document.getElementById('full_brain_notes').style.display = 'block';
+            }
+        }
+
+        CIFTI_select.onchange = function() {
+            CIFTI = CIFTI_select.value;
+
+            if(CIFTI == 'no') {
+                document.getElementById('CIFTI_notes').style.display = 'block';
+            }
+        }
+
+        /// this var 'dropout' is the value from the 'dropout' field in the form. Only for JS
+        dropout_select.onchange = function() {
+            dropout = dropout_select.value;
+
+            if(dropout == 'yes') {
+                document.getElementById('dropout_notes').style.display = 'block';
+            }
+        }
+
+
     </script>
     <hr>
     <p> The following users rated this image: </p>
