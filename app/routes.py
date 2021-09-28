@@ -141,7 +141,8 @@ def subject_scans(subject):
     scan_names = set()
 
     for file in files:
-        scan_names.add(file[file.find('R_')+2 : file.find('.fM')])
+        if subject in file:
+            scan_names.add(file[file.find('R_')+2 : file.find('.fM')])
 
     print(scan_names)
 
@@ -193,11 +194,15 @@ def scan_rater(subject, filename):
 @login_required
 def download():
     import csv 
-    file = open('ratings.csv', 'w')
-    csv = csv.writer(file)
-    ratings_dat = db.session.query(ScanRater).all()
-    [csv.writerow([getattr(curr, column.name) for column in ScanRater.__mapper__.columns]) for curr in ratings_dat]
-    file.close()
+    with open('ratings.csv', 'w') as f:
+        csv = csv.writer(f)
+        ratings_dat = db.session.query(ScanRater).all()
+        columns = ['id', 'subject', 'scan_type', 'distort_okay',
+                   'distort_notes', 'SBF_corruption', 'SBF_corr_notes',
+                   'full_brain_coverage', 'full_brain_notes', 'CIFTI_map_typical',
+                   'CIFTI_notes', 'dropout', 'dropout_notes', 'rating', 'notes']
+        csv.writerow(columns)
+        [csv.writerow([getattr(curr, column.name) for column in ScanRater.__mapper__.columns]) for curr in ratings_dat]
     return redirect(url_for('home_page'))
 
 
