@@ -32,7 +32,9 @@ Finally, to run the app just input
   
 # braincheck docker instructions
 
-To build, run:
+First, make sure you put png files in the `png` directory in the root of the braintest repository. The Dockerfile copies these in and then moves them to the correct place in the application.
+
+Next, to build, run:
 
 ```
   docker build --tag braincheck .
