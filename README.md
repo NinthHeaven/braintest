@@ -1,8 +1,8 @@
-# braincheck  installment instructions 
+# braintest  installment instructions 
 
 After cloning the repository, type into the terminal:
 ```
-  cd braincheck 
+  cd braintest 
 ```
 
 After you are in the braincheck directory, create a virtual environment in the terminal and activate it
@@ -30,20 +30,27 @@ Finally, to run the app just input
 ```
   
   
-# braincheck docker instructions
+# braintest docker instructions
 
 First, make sure you put png files in the `png` directory in the root of the braintest repository. The Dockerfile copies these in and then moves them to the correct place in the application.
+
+For example:
+
+```
+  mkdir /path/to/braintest/png
+  cp /path/to/my_png_folder/* /path/to/braintest/png/
+```
 
 Next, to build, run:
 
 ```
-  docker build --tag braincheck .
+  docker build --tag braintest .
 ```
 
 To run the docker container:
 
 ```
-  docker run --rm -p 5000:5000 braincheck
+  docker run --rm -p 5000:5000 braintest
 ```
 
 Then navigate to 127.0.0.1:5000 in a browser. C'est viola.
