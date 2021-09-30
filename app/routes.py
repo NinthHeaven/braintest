@@ -2,13 +2,14 @@ from flask import render_template, redirect, url_for, request, flash, send_from_
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql.elements import Null
 from werkzeug.urls import url_parse
+from werkzeug.utils import send_file
 #from werkzeug.utils import secure_filename
 from app import app, db
 from app.forms import ImgRating, Login, Register, EditProfile, Notifications, ImgUploader, SceneChoose
 from app.models import Usernames, Ratings, Broadcasts, ScanRater
 from datetime import datetime
 import os
-import re
+from flask import send_file
 files = os.listdir('app/static/subjects/HCD_wb1.4.2.pngs')
 # Constantly update the time a user accesses the page
 @app.before_request
@@ -194,7 +195,7 @@ def scan_rater(subject, filename):
 @login_required
 def download():
     import csv 
-    with open('ratings.csv', 'w') as f:
+    with open('app/ratings.csv', 'w') as f:
         csv = csv.writer(f)
         ratings_dat = db.session.query(ScanRater).all()
         columns = ['id', 'subject', 'scan_type', 'distort_okay',
@@ -203,7 +204,9 @@ def download():
                    'CIFTI_notes', 'dropout', 'dropout_notes', 'rating', 'notes']
         csv.writerow(columns)
         [csv.writerow([getattr(curr, column.name) for column in ScanRater.__mapper__.columns]) for curr in ratings_dat]
-    return redirect(url_for('home_page'))
+
+    return send_file('ratings.csv', as_attachment=True)
+
 
 
 @app.route('/logout')
