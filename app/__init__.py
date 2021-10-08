@@ -10,7 +10,6 @@ from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.config.from_object(DefaultConfig)
-#app.config['UPLOAD_PATH'] = '/static/uploads'
 db = SQLAlchemy(app)
 migrate = Migrate (app, db)
 
@@ -31,7 +30,7 @@ if not app.debug:
          secure = ()
       mail_handler = SMTPHandler(mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
                                  fromaddr='no-reply@' + app.config['MAIL_SERVER'],
-                                 toaddrs=app.config['ADMINS'], subject='Braincheck [BETA] Failure',
+                                 toaddrs=app.config['ADMINS'], subject='Braincheck [ALPHA] Failure',
                                  credentials=auth, secure=secure)
       mail_handler.setLevel(logging.ERROR)
       app.logger.addHandler(mail_handler)

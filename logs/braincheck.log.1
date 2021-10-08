@@ -1,4 +1,4 @@
-2021-09-16 06:14:34,665 ERROR: Exception on /scan_rater/HCD2993079/tfMRI_CARIT_AP [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+2021-09-30 20:43:47,769 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
 Traceback (most recent call last):
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
     response = self.full_dispatch_request()
@@ -10,47 +10,10 @@ Traceback (most recent call last):
     return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 188, in scan_rater
-    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene, scene_form=scene_form, images=images)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 147, in render_template
-    return _render(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 128, in _render
-    rv = template.render(context)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1304, in render
-    self.environment.handle_exception()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 2, in top-level template code
-    {% import 'bootstrap/wtf.html' as wtf %}
-  File "C:\Users\penie\brain_test\app\templates\base.html", line 1, in top-level template code
-    {% extends "bootstrap/base.html" %}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
-    {%- block html %}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
-    {% block body -%}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
-    {% block content -%}
-  File "C:\Users\penie\brain_test\app\templates\base.html", line 51, in block 'content'
-    {% block app_content %}{% endblock %}
-  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 196, in block 'app_content'
-    {% include '_ratings.html' %}
-  File "C:\Users\penie\brain_test\app\templates\_ratings.html", line 5, in top-level template code
-    {% if rating.distort_okay.data == 'yes' %}<p>Distortion correction okay</p>{% else %}<p>Problems with distortion correctness</p>{% endif %}<br>
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 474, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'app.models.ScanRater object' has no attribute 'distort_okay'
-2021-09-16 06:22:25,144 ERROR: Exception on /scan_rater/HCD2993079/tfMRI_CARIT_AP [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1770, in _execute_context
-    self.dialect.do_execute(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\default.py", line 717, in do_execute
-    cursor.execute(statement, parameters)
-sqlite3.OperationalError: no such column: scan_ratings.distort_okay
-
-The above exception was the direct cause of the following exception:
-
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined
+2021-09-30 20:47:44,924 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
 Traceback (most recent call last):
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
     response = self.full_dispatch_request()
@@ -62,57 +25,96 @@ Traceback (most recent call last):
     return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 189, in scan_rater
-    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene, scene_form=scene_form, images=images)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 147, in render_template
-    return _render(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 128, in _render
-    rv = template.render(context)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1304, in render
-    self.environment.handle_exception()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 2, in top-level template code
-    {% import 'bootstrap/wtf.html' as wtf %}
-  File "C:\Users\penie\brain_test\app\templates\base.html", line 1, in top-level template code
-    {% extends "bootstrap/base.html" %}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
-    {%- block html %}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
-    {% block body -%}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
-    {% block content -%}
-  File "C:\Users\penie\brain_test\app\templates\base.html", line 51, in block 'content'
-    {% block app_content %}{% endblock %}
-  File "C:\Users\penie\brain_test\app\templates\rate_image.html", line 195, in block 'app_content'
-    {% for rating in image_ratings %}
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\query.py", line 2837, in __iter__
-    return self._iter().__iter__()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\query.py", line 2844, in _iter
-    result = self.session.execute(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\orm\session.py", line 1689, in execute
-    result = conn._execute_20(statement, params or {}, execution_options)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1582, in _execute_20
-    return meth(self, args_10style, kwargs_10style, execution_options)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 323, in _execute_on_connection
-    return connection._execute_clauseelement(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1451, in _execute_clauseelement
-    ret = self._execute_context(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1813, in _execute_context
-    self._handle_dbapi_exception(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1994, in _handle_dbapi_exception
-    util.raise_(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\util\compat.py", line 207, in raise_
-    raise exception
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1770, in _execute_context
-    self.dialect.do_execute(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\sqlalchemy\engine\default.py", line 717, in do_execute
-    cursor.execute(statement, parameters)
-sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: scan_ratings.distort_okay
-[SQL: SELECT scan_ratings.id AS scan_ratings_id, scan_ratings.subj_name AS scan_ratings_subj_name, scan_ratings.scan_type AS scan_ratings_scan_type, scan_ratings.distort_okay AS scan_ratings_distort_okay, scan_ratings.distort_notes AS scan_ratings_distort_notes, scan_ratings."SBF_corr" AS "scan_ratings_SBF_corr", scan_ratings."SBF_corr_notes" AS "scan_ratings_SBF_corr_notes", scan_ratings.full_brain_cov AS scan_ratings_full_brain_cov, scan_ratings.full_brain_notes AS scan_ratings_full_brain_notes, scan_ratings."CIFTI_map" AS "scan_ratings_CIFTI_map", scan_ratings."CIFTI_notes" AS "scan_ratings_CIFTI_notes", scan_ratings.dropout AS scan_ratings_dropout, scan_ratings.dropout_notes AS scan_ratings_dropout_notes, scan_ratings.rating AS scan_ratings_rating, scan_ratings.notes AS scan_ratings_notes, scan_ratings.user_id AS scan_ratings_user_id 
-FROM scan_ratings 
-WHERE scan_ratings.subj_name = ? AND scan_ratings.scan_type = ?]
-[parameters: ('HCD2993079', 'tfMRI_CARIT_AP')]
-(Background on this error at: http://sqlalche.me/e/14/e3q8)
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined
+2021-09-30 21:32:47,161 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined
+2021-09-30 21:33:47,710 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined
+2021-09-30 21:39:36,500 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined
+2021-09-30 21:41:24,812 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined
+2021-09-30 21:50:45,220 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined
+2021-09-30 22:17:57,496 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+Traceback (most recent call last):
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\penie\brain_test\app\routes.py", line 197, in download
+    throw_error = testme
+NameError: name 'testme' is not defined

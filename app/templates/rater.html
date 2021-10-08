@@ -48,13 +48,15 @@
             <th>Subject</th>
             <th># Of Scans Rated</th>
         </tr>
+        <tr>
         {% for subj in subj_list %}
             <tr>
-                    <td><a href="{{ url_for('subject_scans', subject=subj) }}">{{subj}}</a></td>
-                    {% for subject, count in total_ratings %}
-                        {% if subj in subject %}<td>{{ count }}/{{ subject_files[subj] }}</td>
-                        {% endif %}
-                    {% endfor %}
+                <td><a href="{{ url_for('subject_scans', subject=subj) }}">{{subj}}</a></td>
+                <td>
+                    {% if subj in total_ratings.keys() %}{{ total_ratings[subj] }}/{{ subject_files[subj] }}
+                    {% else %} 0/{{ subject_files[subj] }}
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </table>

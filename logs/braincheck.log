@@ -1,4 +1,4 @@
-2021-09-16 12:44:16,982 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+2021-10-07 15:56:36,389 ERROR: Exception on /rater [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
 Traceback (most recent call last):
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
     response = self.full_dispatch_request()
@@ -10,10 +10,36 @@ Traceback (most recent call last):
     return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 196, in download
-    file = open('ratings.csv', 'w')
-PermissionError: [Errno 13] Permission denied: 'ratings.csv'
-2021-09-30 11:48:49,930 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+  File "C:\Users\penie\brain_test\app\routes.py", line 135, in rater
+    return render_template('rater.html', subj_list=subj_list, total_ratings=total_ratings, total_files=total_files, subject_files=subject_files)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 147, in render_template
+    return _render(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 128, in _render
+    rv = template.render(context)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\penie\brain_test\app\templates\rater.html", line 2, in top-level template code
+    {% import 'bootstrap/wtf.html' as wtf %}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 1, in top-level template code
+    {% extends "bootstrap/base.html" %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
+    {% block body -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
+    {% block content -%}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 51, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "C:\Users\penie\brain_test\app\templates\rater.html", line 57, in block 'app_content'
+    {% if subj in total_ratings[i][0] %}{{ count }}/{{ subject_files[subj] }}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 455, in getitem
+    return obj[argument]
+jinja2.exceptions.UndefinedError: list object has no element ('HCD0694564', 1)
+2021-10-07 22:11:42,338 ERROR: Exception on /rater [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
 Traceback (most recent call last):
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
     response = self.full_dispatch_request()
@@ -25,10 +51,36 @@ Traceback (most recent call last):
     return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 198, in download
-    with open('ratings.csv', 'w') as f:
-PermissionError: [Errno 13] Permission denied: 'ratings.csv'
-2021-09-30 11:50:07,006 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
+  File "C:\Users\penie\brain_test\app\routes.py", line 134, in rater
+    return render_template('rater.html', subj_list=subj_list, total_ratings=total_ratings, total_files=total_files, subject_files=subject_files)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 147, in render_template
+    return _render(
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 128, in _render
+    rv = template.render(context)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\penie\brain_test\app\templates\rater.html", line 2, in top-level template code
+    {% import 'bootstrap/wtf.html' as wtf %}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 1, in top-level template code
+    {% extends "bootstrap/base.html" %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block 'doc'
+    {%- block html %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block 'html'
+    {% block body -%}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block 'body'
+    {% block content -%}
+  File "C:\Users\penie\brain_test\app\templates\base.html", line 51, in block 'content'
+    {% block app_content %}{% endblock %}
+  File "C:\Users\penie\brain_test\app\templates\rater.html", line 56, in block 'app_content'
+    {% for i in range(len(total_ratings)) %}
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\utils.py", line 84, in from_obj
+    if hasattr(obj, "jinja_pass_arg"):
+jinja2.exceptions.UndefinedError: 'len' is undefined
+2021-10-07 22:22:38,185 ERROR: Exception on /rater [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
 Traceback (most recent call last):
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
     response = self.full_dispatch_request()
@@ -40,85 +92,22 @@ Traceback (most recent call last):
     return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
   File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 198, in download
-    f= open('ratings.csv', 'w')
-PermissionError: [Errno 13] Permission denied: 'ratings.csv'
-2021-09-30 11:53:15,115 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 198, in download
-    with open('ratings.csv', 'w') as f:
-PermissionError: [Errno 13] Permission denied: 'ratings.csv'
-2021-09-30 11:53:56,795 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 198, in download
-    with open('ratings.csv', 'w') as f:
-PermissionError: [Errno 13] Permission denied: 'ratings.csv'
-2021-09-30 11:56:07,391 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 208, in download
-    return send_file('ratings.csv', as_attachment=True)
-TypeError: send_file() missing 1 required positional argument: 'environ'
-2021-09-30 11:56:12,260 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 208, in download
-    return send_file('ratings.csv', as_attachment=True)
-TypeError: send_file() missing 1 required positional argument: 'environ'
-2021-09-30 11:57:42,403 ERROR: Exception on /download [GET] [in c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py:1454
-Traceback (most recent call last):
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "C:\Users\penie\brain_test\app\routes.py", line 208, in download
-    return send_file('ratings.csv', as_attachment=True)
-  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\helpers.py", line 612, in send_file
-    return werkzeug.utils.send_file(
-  File "c:\users\penie\brain_test\venv\lib\site-packages\werkzeug\utils.py", line 697, in send_file
-    stat = os.stat(path)
-FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\penie\\brain_test\\app\\ratings.csv'
+  File "C:\Users\penie\brain_test\app\routes.py", line 137, in rater
+    return render_template('rater.html', subj_list=subj_list, total_ratings=subject_ratings, total_files=total_files, subject_files=subject_files)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\flask\templating.py", line 148, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 1068, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 997, in get_template
+    return self._load_template(name, globals)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 958, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\loaders.py", line 137, in load
+    code = environment.compile(source, name, filename)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 757, in compile
+    self.handle_exception(source=source_hint)
+  File "c:\users\penie\brain_test\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\penie\brain_test\app\templates\rater.html", line 62, in template
+    {% endfor %}
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.

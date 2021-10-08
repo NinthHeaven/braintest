@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
-from sqlalchemy.sql.elements import Null
+from sqlalchemy.sql.elements import Null, TextClause
 from werkzeug.urls import url_parse
 from werkzeug.utils import send_file
 #from werkzeug.utils import secure_filename
@@ -126,10 +126,15 @@ def rater():
             if s in file:
                 count+=1
                 subject_files[s] = count
+    
     total_ratings = db.session.query(ScanRater.subj_name, db.func.count()).group_by(ScanRater.subj_name).all()
 
+    subject_ratings = {subject:count for subject,count in total_ratings}
 
-    return render_template('rater.html', subj_list=subj_list, total_ratings=total_ratings, total_files=total_files, subject_files=subject_files)
+    ## NOTE: Remember that the ratings have already been made by someone else (talk about how to analyze ratings)
+
+
+    return render_template('rater.html', subj_list=subj_list, total_ratings=subject_ratings, total_files=total_files, subject_files=subject_files)
 
 @app.route('/subject/<subject>', methods=['GET', 'POST'])
 @login_required
@@ -145,11 +150,6 @@ def subject_scans(subject):
         if subject in file:
             scan_names.add(file[file.find('R_')+2 : file.find('.fM')])
 
-    print(scan_names)
-
-    # sanity check for printing the scans
-    for scan_type, count in subj_ratings:
-        print(scan_type, count)
 
 
     return render_template('subject_scan.html', subject=subject, scans=scan_names, scan_ratings=subj_ratings)
@@ -160,14 +160,14 @@ def subject_scans(subject):
 def scan_rater(subject, filename):
     # Remove the file ending to just get the DBSeries_desc
     scan = filename
-    print(scan)
+   
     
     images = []
     for file in files:
         if subject in file and scan in file:
             images.append(file)
 
-    print(images)
+   
     # Add scene to the database
     scene = 0
     if 'scene1' in filename:
