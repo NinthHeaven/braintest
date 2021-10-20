@@ -25,6 +25,15 @@
         </div>
     </div>
     {% endif %}
+    <div>
+        <b>Ratings statistics: </b>
+        {% if current_user.username in user_ratings.keys() %}
+        <p>You have rated {{ user_ratings[current_user.username] }} images</p>
+        {% else %}
+        <p>You haven't rated any images yet! <a href="{{ url_for('rater') }}">Go rate some now!</a>></p>
+        {% endif %}
+        <p>Click to view ratings?</p>
+    </div>
     <hr>
     {% for announcement in announcements %}
         {{ announcement.broadcast }} <br>

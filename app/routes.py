@@ -75,7 +75,14 @@ def user(username):
         db.session.commit()
         flash('Message has been sent to the site.')
         return redirect(url_for('user', username=current_user.username))   
-    return render_template('user.html', user=user, announcements=announcements, form=form)
+
+    # returns a tuple of ratings per user (BrainBot, 1; admin, 1)
+    user_ratings = db.session.query(Usernames.username, db.func.count(Usernames.id)).\
+        join(Usernames.scan_ratings).group_by(Usernames.id).all()
+
+    user_ratings = {user:num for user,num in user_ratings}
+
+    return render_template('user.html', user=user, announcements=announcements, form=form, user_ratings=user_ratings)
 
 # TODO: delete later...
 @app.route('/edit_profile', methods=['GET', 'POST'])
