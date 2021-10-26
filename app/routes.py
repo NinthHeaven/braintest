@@ -10,7 +10,8 @@ from app.models import Usernames, Ratings, Broadcasts, ScanRater
 from datetime import datetime
 import os
 from flask import send_file
-files = os.listdir('app/static/subjects/HCD_wb1.4.2.pngs')
+dir = 'app/static/subjects/HCD_wb1.4.2.pngs'
+files = os.listdir(dir)
 # Constantly update the time a user accesses the page
 @app.before_request
 def before_request():
@@ -24,7 +25,42 @@ def before_request():
 def home_page():
     # Create a temporary database connection
     users = db.session.query(Usernames).all()
-    return render_template('home.html', users=users)
+
+    # Display number of subjects currently in the database
+    total_subjects = set()
+    # Get a list of the subjects and also the scan types (will be used for accessing other scans)
+    for i in files:
+        if i not in total_subjects:
+            total_subjects.add(i.split('_V1_MR', 1)[0])
+
+    total_subjects = len(total_subjects)
+
+
+    # Display number of scans that have been rated / total (look at scan_rater for demo)
+    total_scans = 0
+    for file in files:
+        total_scans += 1
+
+    # Display number of scans per user (leaderboard, like mind control)
+    # Same code for profile, copied and pasted below
+    user_ratings = db.session.query(Usernames.username, db.func.count(Usernames.id)).\
+        join(Usernames.scan_ratings).group_by(Usernames.id).all()
+
+    user_ratings = {user:num for user,num in user_ratings}
+
+    # Display ratings in reverse order
+    leaderboard = {user:num for user,num in sorted(user_ratings.items(), key=lambda item: item[1], reverse=True)}
+    #print(leaderboard)
+
+    # % of scans rated Good, Bad, Poor, etc..
+    scan_stats = db.session.query(ScanRater.rating, db.func.count()).group_by(ScanRater.rating).all()
+
+    scan_stats = {rating:count for rating,count in scan_stats}
+
+    # Anything else?
+    # to be continued...
+
+    return render_template('home.html', users=users, total_subjects=total_subjects, leaderboard=leaderboard, total_scans=total_scans, scan_stats=scan_stats)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():

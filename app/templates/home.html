@@ -8,6 +8,18 @@
   <br>
   {% endif %}
   <br>
+  <p>There are currently {{ total_subjects }} subjects registered in the app.</p>
+  <p>{{ total_scans }} scans have been rated thus far.</p>
+  <br>
+  <p>The leaderboard for ratings are: </p>
+  {% for user,count in leaderboard.items() %}
+    <p>{{ user }}, {{count }}</p>
+  {% endfor %}
+  <p>Scan ratings stats: </p>
+  {% for rating, count in scan_stats.items() %}
+    <p>{{ count }} scans have been rated {{ rating }}</p>
+  {% endfor %}
+  <br>
   <p>Click <a href="/logout">here</a> to logout.</p>
   {% for message in get_flashed_messages() %}
     {{ message }}
