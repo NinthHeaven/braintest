@@ -2,19 +2,48 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
+<style>
+  table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 25%;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+</style>
+
   <h1>Hello, {{ current_user.username }}</h1>
+  <hr>
+  <p><strong>This website is still under development. There are still stylistic updates to be made.</strong></p>
   {% if form %}
     {{ wtf.quick_form(form) }}
   <br>
   {% endif %}
   <br>
   <p>There are currently {{ total_subjects }} subjects registered in the app.</p>
-  <p>{{ total_scans }} scans are registered in the app thus far.</p>
+  <p>{{ rated_scans }} / {{ total_scans }} ({{ (rated_scans/total_scans*100)|round(2) }}%) of scans are have been rated in the app thus far.</p>
   <br>
-  <p>The leaderboard for ratings are: </p>
-  {% for user,count in leaderboard.items() %}
-    <p>{{ user }}, {{count }}</p>
-  {% endfor %}
+  <p>The users with the most ratings are: </p>
+  <table>
+    <tr> 
+      <th>User</th>
+      <th>Scans rated</th>
+    </tr>
+    {% for user,count in leaderboard.items() %}
+      <tr>
+        <td>{{ user }}</td>
+        <td>{{ count }}</td>
+      </tr>
+    {% endfor %}
+  </table>
   <p>Scan ratings stats: </p>
   {% for rating, count in scan_stats.items() %}
     <p>{{ count }} scans have been rated {{ rating }}</p>

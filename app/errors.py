@@ -1,4 +1,5 @@
-# CUSTOM MADE ERROR MESSAGES (do this later)
+# CUSTOM MADE ERROR MESSAGES
+# These are more of a "Oh no a bug has been found!" type message instead of the "SERVER 404" type message
 
 from flask import render_template
 from app import app, db

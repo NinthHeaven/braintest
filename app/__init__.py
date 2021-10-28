@@ -8,19 +8,33 @@ import logging
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask_bootstrap import Bootstrap
 
+# TESTING FOR HTTPS: https://stackoverflow.com/questions/29458548/can-you-add-https-functionality-to-a-python-flask-web-server
+# TODO: FIX
+#import ssl
+
+#context = ssl.SSLContext()
+#context.load_cert_chain('server.crt', 'server.key')
+
+
+# Initiate the app
 app = Flask(__name__)
 app.config.from_object(DefaultConfig)
+#app.run(ssl_context=context)
+
+# I feel like I'll need to use for break loops later...
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 db = SQLAlchemy(app)
 migrate = Migrate (app, db)
 
+# Check to see who is logged on
 login = LoginManager(app)
 login.login_view = 'login'
 
+# Apply bootstrap because web design is hard
 bootstrap = Bootstrap(app)
 
 # Ensures email logger runs during production
-# DOES NOT WORK AS INTENDED, FIX LATER (bug) --fixed--
+# DOES NOT WORK AS INTENDED, FIX LATER (bug) --fixed-- --not fixed again :(--
 if not app.debug:
    if app.config['MAIL_SERVER']:
       auth = None

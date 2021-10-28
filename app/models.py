@@ -6,6 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
 
+# Username database 
+# TODO: Reset password option (right now if you lose it, I can't do anything about it)
 class Usernames(db.Model, UserMixin):
 
     # Set tablename 
@@ -17,9 +19,6 @@ class Usernames(db.Model, UserMixin):
     pass_hash = db.Column(db.String)
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-
-    # Image ratings will be stored here
-    ratings = db.relationship('Ratings', backref='rater', lazy='dynamic')
 
     # Admin and Bot can broadcast messages
     broadcasts = db.relationship('Broadcasts', backref='mod', lazy='dynamic')
@@ -43,23 +42,13 @@ class Usernames(db.Model, UserMixin):
     def __repr__(self):
         return '<username: {}>'.format(self.username)
 
+# Keeping website updated on who is accessing it
 @login.user_loader
 def load_user(id):
     return Usernames.query.get(int(id))
 
-class Ratings(db.Model):
 
-    __tablename__ = 'pic_ratings'
-
-    id = db.Column(db.Integer, primary_key=True)
-    img_name = db.Column(db.String, index=True)
-    rating = db.Column(db.Integer, index=True)
-    notes = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('usernames.id'))
-
-    def __repr__(self):
-        return '<Rating {}>'.format(self.rating)
-
+# Scan rater database (stores all of the rating attributes)
 class ScanRater(db.Model):
 
     __tablename__ = 'scan_ratings'
@@ -83,6 +72,8 @@ class ScanRater(db.Model):
 
     def __repr__(self):
         return '<Rating of Scan {}>'.format(self.rating)
+
+# This is a testing database to display "broadcasts" (aka when changes are made)
 
 class Broadcasts(db.Model):
 
