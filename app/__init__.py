@@ -19,7 +19,8 @@ from flask_bootstrap import Bootstrap
 # Initiate the app
 app = Flask(__name__)
 app.config.from_object(DefaultConfig)
-#app.run(ssl_context=context)
+# if name == "__main__":
+   #app.run(ssl_context=context)
 
 # I feel like I'll need to use for break loops later...
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
