@@ -6,7 +6,7 @@
         table {
         font-family: arial, sans-serif;
         border-collapse: collapse;
-        width: 25%;
+        width: 50%;
         }
 
         td, th {
@@ -70,7 +70,7 @@
                         <tr>
                             {% if rating.scan_rater.username == current_user.username %}
                                 <td>{{ rating.subj_name }}</td>
-                                <td>{{ rating.scan_type }}</td>
+                                <td><a href="{{ url_for('scan_rater', subject=rating.subj_name, filename=rating.scan_type) }}">{{ rating.scan_type }}</a></td>
                                 <td>{{ rating.rating }}</td>
                             {% endif %}
                         </tr>
