@@ -134,7 +134,10 @@ def user(username):
 
     user_ratings = {user:num for user,num in user_ratings}
 
-    return render_template('user.html', user=user, announcements=announcements, form=form, user_ratings=user_ratings)
+    # Summary of ratings for users
+    ratings_summary = db.session.query(ScanRater)
+
+    return render_template('user.html', user=user, announcements=announcements, form=form, user_ratings=user_ratings, ratings_summary=ratings_summary)
 
 # TODO: delete later...
 # Edit profile feature (was for earlier testing)

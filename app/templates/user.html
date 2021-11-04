@@ -2,6 +2,29 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %} 
+    <style>
+        table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 25%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        /* The popup form - hidden by default */
+        .table-popup {
+        display: none;
+        position: dynamic;
+        }
+    </style>
     <table>
         <tr valign="top">
             <td><img src="{{ user.avatar(128) }}"></td>
@@ -32,9 +55,46 @@
         {% else %}
         <p>You haven't rated any images yet! <a href="{{ url_for('rater') }}">Go rate some now!</a></p>
         {% endif %}
-        <p>Click to view ratings?</p>
+        <button onclick='ShowTable()'>Click to view ratings?</button>
+        <div class='table-popup' id='summary'>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Scan</th>
+                        <th>Your Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rating in ratings_summary %}
+                        <tr>
+                            {% if rating.scan_rater.username == current_user.username %}
+                                <td>{{ rating.subj_name }}</td>
+                                <td>{{ rating.scan_type }}</td>
+                                <td>{{ rating.rating }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p>Click the links to see a more detailed report.</p>
+            <br>
+            <button onclick='HideTable()'>Hide summary</button>
+        </div>
     </div>
     <hr>
+
+    <script>
+        /// for opening and closing the form (testing)
+        function ShowTable() {
+            document.getElementById('summary').style.display = 'block';
+        }
+        function HideTable() {
+            document.getElementById('summary').style.display = 'none';
+        }
+    </script>
+
     {% for announcement in announcements %}
         {{ announcement.broadcast }} <br>
     {% endfor %} <br>
