@@ -3,7 +3,7 @@
 
 {% block app_content %}
     <style>
-        .subject-list {
+        table {
         font-family: sans-serif;
         border-collapse: collapse;
         font-size: 0.9em;
@@ -13,28 +13,32 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
         }
 
-        .subject-list thead tr {
+        thead tr {
             background-color: #4a75d1;
             color: #ffffff;
             text-align: left
 
         }
-        
-        .subject-list td, .subject-list th {
+
+        th {
+            cursor: pointer;
+        }
+
+        td, th {
         border: 1px solid #dddddd;
         text-align: left;
         padding: 8px 8px;
         }
 
-        .subject-list tbody tr {
+        tbody tr {
             border-bottom: 1px solid #dddddd;
         }
         
-        .subject-list tbody tr:nth-child(even) {
+        tbody tr:nth-child(even) {
         background-color: #d2dcfc;
         }
 
-        .subject-list tbody tr:last-of-type {
+        tbody tr:last-of-type {
             border-bottom: 2px solid #0e055f;
         }
     </style>
@@ -43,12 +47,11 @@
     <br>
     <p><strong>In order to see the images, please store them in the subjects subfolder.</strong></p>
     <p>Click on a subject to view their scans: </p>
-    <table class="subject-list">
+    <table id='scanTable'>
         <tr>
-            <th>Subject</th>
-            <th># Of Scans Rated</th>
+            <th onclick='sortTable(0)'>Subject</th>
+            <th onclick='sortTable(1)'># Of Scans Rated</th>
         </tr>
-        <tr>
         {% for subj in subj_list %}
             <tr>
                 <td><a href="{{ url_for('subject_scans', subject=subj) }}">{{subj}}</a></td>
@@ -60,4 +63,69 @@
             </tr>
         {% endfor %}
     </table>
+
+<!---Source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sort_table_desc--->
+<!-- broken code below...
+    
+    <script>
+        function sortTable(n) {
+            // Declaring variable names
+            // Includes tables and rows, order of sorting, and other variable names to help with sorted
+            var table, rows, switching, order, noSwitch, i, row1, row2, count = 0;
+            table = document.getElementById('scanTable');
+            // Once header is clicked, assume switching and ascending order is activated depending on column
+            switching = true;
+            order = 'ascending';
+            
+            // switching loop until everything has been sorted
+            while(switching) {
+                // disable switching until switchable rows are found
+                switching = false;
+                rows = table.rows;
+                
+                // Go through each row in the table and check the value of each row and determine if switching is needed
+                // Ignores the column/headers
+                for (i=1; i < rows.length - 1; i++) {
+                    // disable switching until match is found
+                    noSwitch = true;
+
+                    // Get consecutive rows (depending on column) and their corresponding values
+                    row1 = rows[i].getElementsByTagName('TD')[n];
+                    row2 = rows[i+1].getElementsByTagName('TD')[n];
+
+                    // compare the row values and switch according to order declared
+                    if (order == 'ascending') {
+                        if (row1.innerHTML.toLowerCase() > row2.innerHTML.toLowerCase()) {
+                            // activate switch if row1 is greater than row2 (in ascending mode)
+                            noSwitch = false;
+                            break;
+                        }
+                    } else if (order == 'descending') {
+                        if (row1.innerHTML.toLowerCase() < row2.innerHTML.toLowerCase()) {
+                            // activate switch if row1 is smaller than row2 (in descending mode)
+                            noSwitch = false;
+                            break;
+                        }
+                    }
+                }
+                // if switching is activated
+                if (!noSwitch) {
+                    // switch the places of the two rows in question
+                    rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+
+                    // enable switching and increase the count of rows switched
+                    switching = true;
+                    count ++;
+                } else {
+                    // if no rows have been switched and the order is ascending
+                    if (count == 0 && order == 'ascending') {
+                        // switch the order to descending and try the while loop again
+                        order = 'descending';
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+-->
 {% endblock %}
