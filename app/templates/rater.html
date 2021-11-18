@@ -47,22 +47,7 @@
     <br>
     <p><strong>In order to see the images, please store them in the subjects subfolder.</strong></p>
     <p>Click on a subject to view their scans: </p>
-    <table id='scanTable'>
-        <tr>
-            <th onclick='sortTable(0)'>Subject</th>
-            <th onclick='sortTable(1)'># Of Scans Rated</th>
-        </tr>
-        {% for subj in subj_list %}
-            <tr>
-                <td><a href="{{ url_for('subject_scans', subject=subj) }}">{{subj}}</a></td>
-                <td>
-                    {% if subj in total_ratings.keys() %}{{ total_ratings[subj] }}/{{ subject_files[subj] }}
-                    {% else %} 0/{{ subject_files[subj] }}
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+    
 
 <!---Source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sort_table_desc--->
 <!-- broken code below...
