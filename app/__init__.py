@@ -19,8 +19,7 @@ from flask_bootstrap import Bootstrap
 # Initiate the app
 app = Flask(__name__)
 app.config.from_object(DefaultConfig)
-# if name == "__main__":
-   #app.run(ssl_context=context)
+
 
 # I feel like I'll need to use for break loops later...
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
@@ -66,3 +65,4 @@ if not app.debug:
       app.logger.info('Braincheck Startup Info')
 
 from app import routes, models, errors
+

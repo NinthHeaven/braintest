@@ -47,4 +47,92 @@
         <li><span style='color:rgb(9, 0, 134);'>Update profile page to show user's ratings</span></li>
         <li><span style='color:rgb(9, 0, 134);'>Image viewer</span></li>
     </ul>
+
+    <table id='scanTable'>
+        <tr>
+            <th onclick='sortTable(0)'>A Word</th>
+            <th onclick='sortTable(1)'>B Word</th>
+        </tr>
+        <tr>
+            <td>Hello</td>
+            <td>Goodbye</td>
+        </tr>
+        <tr>
+            <td>No one</td>
+            <td>Everyone</td>
+        </tr>
+        <tr>
+            <td>Computer</td>
+            <td>Phone</td>
+        </tr>
+        <tr>
+            <td>Helicopter</td>
+            <td>Car</td>
+        </tr>
+        <tr>
+            <td>Ranger Rover</td>
+            <td>Ranger Danger</td>
+        </tr>
+    </table>
+
+    <script>
+        function sortTable(n) {
+            // Declaring variable names
+            // Includes tables and rows, order of sorting, and other variable names to help with sorted
+            var table, rows, switching, order, noSwitch, i, row1, row2, count = 0;
+            table = document.getElementById('scanTable');
+            // Once header is clicked, assume switching and ascending order is activated depending on column
+            switching = true;
+            order = 'ascending';
+            
+            // switching loop until everything has been sorted
+            while(switching) {
+                // disable switching until switchable rows are found
+                switching = false;
+                rows = table.rows;
+                
+                // Go through each row in the table and check the value of each row and determine if switching is needed
+                // Ignores the column/headers
+                for (i=1; i < rows.length - 1; i++) {
+                    // disable switching until match is found
+                    noSwitch = true;
+
+                    // Get consecutive rows (depending on column) and their corresponding values
+                    row1 = rows[i].getElementsByTagName('TD')[n];
+                    row2 = rows[i+1].getElementsByTagName('TD')[n];
+
+                    // compare the row values and switch according to order declared
+                    if (order == 'ascending') {
+                        if (row1.innerHTML.toLowerCase() > row2.innerHTML.toLowerCase()) {
+                            // activate switch if row1 is greater than row2 (in ascending mode)
+                            noSwitch = false;
+                            break;
+                        }
+                    } else if (order == 'descending') {
+                        if (row1.innerHTML.toLowerCase() < row2.innerHTML.toLowerCase()) {
+                            // activate switch if row1 is smaller than row2 (in descending mode)
+                            noSwitch = false;
+                            break;
+                        }
+                    }
+                }
+                // if switching is activated
+                if (!noSwitch) {
+                    // switch the places of the two rows in question
+                    rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+
+                    // enable switching and increase the count of rows switched
+                    switching = true;
+                    count ++;
+                } else {
+                    // if no rows have been switched and the order is ascending
+                    if (count == 0 && order == 'ascending') {
+                        // switch the order to descending and try the while loop again
+                        order = 'descending';
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock %}
