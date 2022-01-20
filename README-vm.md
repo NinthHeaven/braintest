@@ -9,8 +9,8 @@ This assumes you are on a machine that is able to access the VM, and that `brain
 Create a zip of the archive. From the directory of the git repository, run
 
 ```
-git archive --format zip --output ../braincheck.zip main
-rsync -aiv ../braincheck.zip braintest:/srv/braincheck/braintest-main
+git archive --format zip --output ../braintest.zip main
+rsync -aiv ../braintest.zip braintest:/srv/braincheck/braintest-main
 ```
 
 ## 2. Virtual machine
