@@ -9,37 +9,25 @@ This assumes you are on a machine that is able to access the VM, and that `brain
 Create a zip of the archive. From the directory of the git repository, run
 
 ```
-git archive --format zip --output ../braintest.zip main
-rsync -aiv ../braintest.zip braintest:/srv/braincheck/braintest-main
+git push ssh://braintest/srv/braincheck/braintest/.git
 ```
 
-## 2. Virtual machine
-
-On the VM run:
-
-```
-cd /srv/braincheck
-mv braintest-main/png ./
-rm -rf braintest-main
-unzip braintest.zip
-mv png braintest-main/
-```
-
-## 3. Local machine
+## 2. Local machine
 
 Then, to get the python packages:
 
 ```
 mkdir -p packages
 pip3 download -d packages/ -r requirements.txt --platform linux_x86_64 --python-version 38 --no-deps
-rsync -aiv packages braintest:/srv/braincheck/braintest-main
+rsync -aiv packages braintest:/srv/braincheck/braintest
 ```
 
 ## 4. Virtual machine
 
 ```
-cd braintest-main/
-docker build --tag braintest - < Dockerfile-vm
-docker run -d --rm --name braintest -p 80:5000 braintest
+cd braintest/
+docker build --tag braintest -f Dockerfile-vm .
+docker run -d --rm -v /srv/braincheck/braintest_db/usernames.db:/app/usernames.db --name braintest -p 80:5000 braintest
 ```
 
+The option `-v /srv/braincheck/braintest_db/usernames.db:/app/usernames.db` ensures that database changes are saved outside the container so that when it is restarted or rebuilt, the database persists.
