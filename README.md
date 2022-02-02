@@ -47,6 +47,12 @@ Next, to build, run:
   docker build --tag braintest .
 ```
 
+If you are on a Harvard VM, you can use the `Dockerfile-vm` which has environment variables set for the correct http/s proxies:
+
+```
+  docker build --tag braintest --file Dockerfile-vm .
+```
+
 To run the docker container:
 
 ```
