@@ -10,12 +10,39 @@ from app.models import Usernames, Broadcasts, ScanRater
 from datetime import datetime
 import os
 from flask import send_file
+import pandas as pd
 
 # Static folder directory where all scans will be scanned and uploaded to app
 dir = 'app/static/subjects/HCD_wb1.4.2.pngs'
 
 # Listing all the files inside 
 files = os.listdir(dir)
+
+# Read IRR csv
+irr_ratings = pd.read_csv('app/static/subjects/irr_set.csv')
+
+# Getting subject and scan data from csv file and storing into lists
+irr_tasks = list(irr_ratings['SubjTask'])
+irr_scantypes, irr_dbscans, irr_polarity = list(irr_ratings['ScanType']), list(irr_ratings['DB_Scan']), list(irr_ratings['Polarity'])
+
+# Relevant scantype informations for each subject
+irr_data = [str(scantype) + '_' + str(scan) + '_' + str(pol) for scantype,scan,pol in zip(irr_scantypes, irr_dbscans, irr_polarity)]
+
+# Storing subjects and their scantypes to be rated in dict
+IRR_DICT = {}
+count = 0
+
+# Add subject and scantype to dict, appending each new scantype if subject already in dict
+for task in irr_tasks:
+    subj = task.split('_')[0]
+    scan = irr_data[count]
+    if subj in IRR_DICT.keys():
+        IRR_DICT[subj].append(scan)
+    else:
+        IRR_DICT[subj] = [scan]
+    count+=1 
+
+
 
 # Constantly update the time a user accesses the page
 @app.before_request
@@ -197,8 +224,12 @@ def rater():
 
     ## NOTE: Remember that the ratings have already been made by someone else (talk about how to analyze ratings)
 
+    #TODO: Add irr subjects
+    irr_subjects = list(IRR_DICT.keys())
 
-    return render_template('rater.html', subj_list=subj_list, total_ratings=subject_ratings, total_files=total_files, subject_files=subject_files)
+
+
+    return render_template('rater.html', subj_list=subj_list, total_ratings=subject_ratings, total_files=total_files, subject_files=subject_files, irr_subjs=irr_subjects)
 
 @app.route('/subject/<subject>', methods=['GET', 'POST'])
 @login_required
@@ -215,9 +246,22 @@ def subject_scans(subject):
         if subject in file:
             scan_names.add(file[file.find('R_')+2 : file.find('.fM')])
 
+    #TODO: Check if subject is in dictionary (IRR_DICT[subject])
+    #TODO: If so, mark scans as to-be-rated (i.e red) if it's in IRR_DICT keys
+
+    try:
+        irr_scans = IRR_DICT[subject]
+    except:
+        print('Subject not found in dict')
 
 
-    return render_template('subject_scan.html', subject=subject, scans=scan_names, scan_ratings=subj_ratings)
+
+    try:
+        return render_template('subject_scan.html', subject=subject, scans=scan_names, scan_ratings=subj_ratings, irr_scans=irr_scans)
+    except:
+        pass
+
+    return render_template('subject_scan.html', subject=subject, scans=scan_names, scan_ratings=subj_ratings, irr_scans=[None])
 
 # Actual scan rater page
 # TODO: Implement some stylistic changes to this page
@@ -227,11 +271,46 @@ def scan_rater(subject, filename):
     # Remove the file ending to just get the DBSeries_desc
     scan = filename
    
-    
+    # Store filenames of scan images
     images = []
+
+    # Storing information for all scans (for toggling between scans)
+    ALL_FILES = set([file[file.find('R_')+2 : file.find('.fM')] for file in files if subject in file])
     for file in files:
         if subject in file and scan in file:
             images.append(file)
+
+    # Dictionary to mark reference and rate scans
+    ALL_SCANS = {}
+    
+    # check for irr scans
+    try:
+        subj_irr = IRR_DICT[subject]
+    except:
+        subj_irr = [None]
+
+    # check if scans are references or rates
+    for file in ALL_FILES:
+        if file in subj_irr:
+            ALL_SCANS[file] = 'Rate'
+        else:
+            ALL_SCANS[file] = 'Ref'
+
+
+
+    # store current index 
+    curr_idx = list(ALL_SCANS.keys()).index(scan)
+
+    # Get index for next and previous scans
+    nxt_idx = (curr_idx + 1)%len(ALL_FILES)
+    prev_idx = (curr_idx - 1) %len(ALL_FILES)
+
+    # Get filenames to redirect to this url
+    nxt_file = list(ALL_SCANS.keys())[nxt_idx]
+    prev_file = list(ALL_SCANS.keys())[prev_idx]
+
+
+            
 
    
     # Add scene to the database
@@ -240,6 +319,22 @@ def scan_rater(subject, filename):
         scene = 1
     elif 'scene2' in filename:
         scene = 2
+
+    # TODO: Create scans dictionary (png files for subject: scantype)
+    # TODO: Make toggle bar options ('All', 'Ref', 'Rate')
+    # TODO: Depending on toggle bar option selected (ideally, this would use JS, but render template)
+
+    ## if toggle bar = all:
+        # display all scans
+    ## elif toggle bar = ref:
+        # display ref scans
+    ## else:
+        # display rate scans
+
+    # if next image is clicked
+    # get index of scan, add 1
+    # new index = new_idx % len(files) ## MULTIPLY BY 1e6 for INFINITE LOOP
+    # render filename[new_idx]    
     scan_ratings = db.session.query(ScanRater).filter_by(subj_name=subject, scan_type=scan)
     form = ImgRating()
     scene_form = SceneChoose()
@@ -254,7 +349,7 @@ def scan_rater(subject, filename):
         db.session.commit()
         flash('Thanks for rating!')
         return redirect(url_for('scan_rater', subject=subject, filename=filename))
-    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene, scene_form=scene_form, images=images)
+    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene, scene_form=scene_form, images=images, nxt=nxt_file, prev=prev_file)
 
 # TODO: Add this to home page or separate page
 # only accessed by adding '/download' to end of URL (will auto download a file)

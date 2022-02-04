@@ -41,11 +41,22 @@
         .subjects tbody tr:last-of-type {
             border-bottom: 2px solid #0e055f;
         }
+        .ref {
+            color: blue;
+        }
+
+        .rate {
+            color: red;
+        }
     </style>
     <h1>Subjects</h1>
     <p><strong>IMPORTANT NOTICE: THIS PAGE IS UNDER TESTING, NOTHING HERE IS FINAL.</strong></p>
     <br>
     <p><strong>In order to see the images, please store them in the subjects subfolder.</strong></p>
+
+    <p>WIP:</p>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
     <p>Click on a subject to view their scans: </p>
     
     <table class='subjects' id='test'>
@@ -55,10 +66,10 @@
         </tr>
         {% for subj in subj_list %}
             <tr>
-                <td><a href="{{ url_for('subject_scans', subject=subj) }}">{{subj}}</a></td>
+                <td><a class="{{'rate' if subj in irr_subjs else 'ref'}}" href="{{ url_for('subject_scans', subject=subj) }}">{{subj}}</a></td>
                 <td>
-                    {% if subj in total_ratings.keys() %}{{ total_ratings[subj] }}/{{ subject_files[subj] }}
-                    {% else %} 0/{{ subject_files[subj] }}
+                    {% if subj in total_ratings.keys() %}{{ total_ratings[subj] }}/{{ (subject_files[subj]/2)|int }}
+                    {% else %} 0/{{ (subject_files[subj]/2)|int }}
                     {% endif %}
                 </td>
             </tr>
@@ -80,6 +91,26 @@
                 .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
                 .forEach(tr => table.appendChild(tr) );
         })));
+
+        // doesn't work!
+        function myFunction() {
+            var input, filter, table, tr, a, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementsByClassName("subjects");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                } 
+            }
+        }
 
     </script>
 {% endblock %}
