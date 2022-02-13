@@ -56,7 +56,7 @@ class ImgRating(FlaskForm):
                                       choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
     CIFTI_map_typ = SelectField('Does mapping of CIFTI onto surface/volume look “reasonable/typical”? If not, please elaborate.',
                                 choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
-    dropout = SelectField('Is there dropout (i.e., dark areas within fuchsia outline)? If so, please elaborate.',
+    dropout = SelectField('Is there abnormal dropout (i.e., dark areas within fuchsia outline)? (Some T2* dropout is expected and varies in location between AP/PA scans and by subject. Typical T2* dropout is L/R symmetric and common in anterior frontal and temporal lobes.) If abnormal dropout, please elaborate.',
                           choices=[(None, 'Select an option'), ('yes', 'Yes'), ('no', 'No')], default=None, validators=[DataRequired()])
     notes = StringField('Any additional notes about the scan?')
     rating = RadioField('Quality Rating?', choices=[('good', '0 (Good)'), ('okay', '1 (Okay)'), ('bad', '2 (Bad)'), ('severe', '3 (Severe)')])
