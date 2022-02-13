@@ -241,10 +241,35 @@ def subject_scans(subject):
     # Depict scan names (to fix the rater page)
     scan_names = set()
 
+    # Ordering for scan polarities
+    AP_scans = ['REST1', 'GUESSING', 'CARIT', 'REST2']
+    PA_scans = ['REST1', 'GUESSING', 'CARIT', 'EMOTION', 'REST2'] 
+
     # List files appropriately
     for file in files:
         if subject in file:
             scan_names.add(file[file.find('R_')+2 : file.find('.fM')])
+
+    # Subset AP images and PA images
+    AP_images = [i for i in scan_names if 'AP' in i]
+    PA_images = [i for i in scan_names if 'PA' in i]
+
+    # All images in order
+    ordered_scans = []
+
+    # order AP_scans first
+    for scan in AP_scans:
+        for image in AP_images:
+            if scan in image:
+                ordered_scans.append(image)
+
+    # order PA_scans later
+    for scan in PA_scans:
+        for image in PA_images:
+            if scan in image:
+                ordered_scans.append(image)
+
+    
 
     #TODO: Check if subject is in dictionary (IRR_DICT[subject])
     #TODO: If so, mark scans as to-be-rated (i.e red) if it's in IRR_DICT keys
@@ -257,11 +282,11 @@ def subject_scans(subject):
 
 
     try:
-        return render_template('subject_scan.html', subject=subject, scans=scan_names, scan_ratings=subj_ratings, irr_scans=irr_scans)
+        return render_template('subject_scan.html', subject=subject, scans=ordered_scans, scan_ratings=subj_ratings, irr_scans=irr_scans)
     except:
         pass
 
-    return render_template('subject_scan.html', subject=subject, scans=scan_names, scan_ratings=subj_ratings, irr_scans=[None])
+    return render_template('subject_scan.html', subject=subject, scans=ordered_scans, scan_ratings=subj_ratings, irr_scans=[None])
 
 # Actual scan rater page
 # TODO: Implement some stylistic changes to this page
@@ -271,7 +296,7 @@ def scan_rater(subject, filename):
     # Remove the file ending to just get the DBSeries_desc
     scan = filename
    
-    # Store filenames of scan images
+    # Store filenames of scan images to display
     images = []
 
     # Storing information for all scans (for toggling between scans)
@@ -295,8 +320,7 @@ def scan_rater(subject, filename):
             ALL_SCANS[file] = 'Rate'
         else:
             ALL_SCANS[file] = 'Ref'
-
-
+        
 
     # store current index 
     curr_idx = list(ALL_SCANS.keys()).index(scan)
