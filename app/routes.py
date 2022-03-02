@@ -258,21 +258,18 @@ def subject_scans(subject):
     ordered_scans = []
 
     # order AP_scans first
+    # BUG: DOES NOT ACCOUNT FOR REST1as and REST1bs
     for scan in AP_scans:
         for image in AP_images:
             if scan in image:
                 ordered_scans.append(image)
+
 
     # order PA_scans later
     for scan in PA_scans:
         for image in PA_images:
             if scan in image:
                 ordered_scans.append(image)
-
-    
-
-    #TODO: Check if subject is in dictionary (IRR_DICT[subject])
-    #TODO: If so, mark scans as to-be-rated (i.e red) if it's in IRR_DICT keys
 
     try:
         irr_scans = IRR_DICT[subject]
@@ -294,7 +291,6 @@ def subject_scans(subject):
 @login_required
 def scan_rater(subject, filename):
     # Remove the file ending to just get the DBSeries_desc
-    scan = filename
    
     # Store filenames of scan images to display
     images = []
@@ -302,7 +298,7 @@ def scan_rater(subject, filename):
     # Storing information for all scans (for toggling between scans)
     ALL_FILES = set([file[file.find('R_')+2 : file.find('.fM')] for file in files if subject in file])
     for file in files:
-        if subject in file and scan in file:
+        if subject in file and filename in file:
             images.append(file)
 
     # Dictionary to mark reference and rate scans
@@ -314,16 +310,45 @@ def scan_rater(subject, filename):
     except:
         subj_irr = [None]
 
+
+    ### TODO: functionize redundant line of code ###
+    # Ordering for scan polarities
+    AP_scans = ['REST1', 'GUESSING', 'CARIT', 'REST2']
+    PA_scans = ['REST1', 'GUESSING', 'CARIT', 'EMOTION', 'REST2'] 
+
+    # Subset AP images and PA images
+    AP_images = [i for i in ALL_FILES if 'AP' in i]
+    PA_images = [i for i in ALL_FILES if 'PA' in i]
+
+    ORDERED_FILES = []
+    for scan in AP_scans:
+        for image in AP_images:
+            if scan in image:
+                ORDERED_FILES.append(image)
+
+
+    # order PA_scans later
+    for scan in PA_scans:
+        for image in PA_images:
+            if scan in image:
+                ORDERED_FILES.append(image)
+
     # check if scans are references or rates
-    for file in ALL_FILES:
+    for file in ORDERED_FILES:
         if file in subj_irr:
             ALL_SCANS[file] = 'Rate'
         else:
             ALL_SCANS[file] = 'Ref'
-        
+
+    a_images = []
+
+    for scan in ORDERED_FILES:
+        for file in files:
+            if subject in file and scan in file:
+                a_images.append(file)
 
     # store current index 
-    curr_idx = list(ALL_SCANS.keys()).index(scan)
+    curr_idx = list(ALL_SCANS.keys()).index(filename)
 
     # Get index for next and previous scans
     nxt_idx = (curr_idx + 1)%len(ALL_FILES)
@@ -332,10 +357,6 @@ def scan_rater(subject, filename):
     # Get filenames to redirect to this url
     nxt_file = list(ALL_SCANS.keys())[nxt_idx]
     prev_file = list(ALL_SCANS.keys())[prev_idx]
-
-
-            
-
    
     # Add scene to the database
     scene = 0
@@ -359,12 +380,12 @@ def scan_rater(subject, filename):
     # get index of scan, add 1
     # new index = new_idx % len(files) ## MULTIPLY BY 1e6 for INFINITE LOOP
     # render filename[new_idx]    
-    scan_ratings = db.session.query(ScanRater).filter_by(subj_name=subject, scan_type=scan)
+    scan_ratings = db.session.query(ScanRater).filter_by(subj_name=subject, scan_type=filename)
     form = ImgRating()
     scene_form = SceneChoose()
     if form.validate_on_submit():
         user = Usernames.query.filter_by(username=current_user.username).first_or_404()
-        scan_rating = ScanRater(subj_name=subject, scan_type=scan, rating=form.rating.data, distort_okay=form.distort_okay.data,
+        scan_rating = ScanRater(subj_name=subject, scan_type=filename, rating=form.rating.data, distort_okay=form.distort_okay.data,
                                 distort_notes=form.distort_notes.data, SBF_corr=form.SBF_corruption.data, SBF_corr_notes=form.SBF_notes.data,
                                 full_brain_cov=form.full_brain_coverage.data, full_brain_notes=form.full_brain_notes.data, 
                                 CIFTI_map=form.CIFTI_map_typ.data, CIFTI_notes = form.CIFTI_notes.data, dropout=form.dropout.data,
@@ -373,7 +394,7 @@ def scan_rater(subject, filename):
         db.session.commit()
         flash('Thanks for rating!')
         return redirect(url_for('scan_rater', subject=subject, filename=filename))
-    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=scan, scene=scene, scene_form=scene_form, images=images, nxt=nxt_file, prev=prev_file)
+    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=filename, scene=scene, scene_form=scene_form, images=images, nxt=nxt_file, prev=prev_file, allscans = a_images, curr=curr_idx)
 
 # TODO: Add this to home page or separate page
 # only accessed by adding '/download' to end of URL (will auto download a file)
@@ -391,7 +412,7 @@ def download():
         columns = ['id', 'subject', 'scan_type', 'distort_okay',
                    'distort_notes', 'SBF_corruption', 'SBF_corr_notes',
                    'full_brain_coverage', 'full_brain_notes', 'CIFTI_map_typical',
-                   'CIFTI_notes', 'dropout', 'dropout_notes', 'rating', 'notes']
+                   'CIFTI_notes', 'dropout', 'dropout_notes', 'rating', 'notes', 'rater']
         csv.writerow(columns)
         # Apply data to file
         [csv.writerow([getattr(curr, column.name) for column in ScanRater.__mapper__.columns]) for curr in ratings_dat]

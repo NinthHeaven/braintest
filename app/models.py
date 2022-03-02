@@ -68,7 +68,7 @@ class ScanRater(db.Model):
     dropout_notes = db.Column(db.String, index=True)
     rating = db.Column(db.Integer, index=True)
     notes = db.Column(db.String)
-    user_rater = db.Column(db.Integer, db.ForeignKey('usernames.username'))
+    user_rater = db.Column(db.Integer, db.ForeignKey('usernames.id'))
 
     def __repr__(self):
         return '<Rating of Scan {}>'.format(self.rating)
