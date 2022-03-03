@@ -412,7 +412,7 @@ def download():
         columns = ['id', 'subject', 'scan_type', 'distort_okay',
                    'distort_notes', 'SBF_corruption', 'SBF_corr_notes',
                    'full_brain_coverage', 'full_brain_notes', 'CIFTI_map_typical',
-                   'CIFTI_notes', 'dropout', 'dropout_notes', 'rating', 'notes', 'rater']
+                   'CIFTI_notes', 'dropout', 'dropout_notes', 'rating', 'user_id']
         csv.writerow(columns)
         # Apply data to file
         [csv.writerow([getattr(curr, column.name) for column in ScanRater.__mapper__.columns]) for curr in ratings_dat]
