@@ -42,6 +42,10 @@ for task in irr_tasks:
         IRR_DICT[subj] = [scan]
     count+=1 
 
+# Ordering for scan polarities [below]
+AP_scans = ['REST1', 'GUESSING', 'CARIT', 'REST2']
+PA_scans = ['REST1', 'GUESSING', 'CARIT', 'EMOTION', 'REST2'] 
+
 
 
 # Constantly update the time a user accesses the page
@@ -241,10 +245,6 @@ def subject_scans(subject):
     # Depict scan names (to fix the rater page)
     scan_names = set()
 
-    # Ordering for scan polarities
-    AP_scans = ['REST1', 'GUESSING', 'CARIT', 'REST2']
-    PA_scans = ['REST1', 'GUESSING', 'CARIT', 'EMOTION', 'REST2'] 
-
     # List files appropriately
     for file in files:
         if subject in file:
@@ -291,79 +291,61 @@ def subject_scans(subject):
 @login_required
 def scan_rater(subject, filename):
     # Remove the file ending to just get the DBSeries_desc
-   
-    # Store filenames of scan images to display
-    images = []
-
-    # Storing information for all scans (for toggling between scans)
     ALL_FILES = set([file[file.find('R_')+2 : file.find('.fM')] for file in files if subject in file])
-    for file in files:
-        if subject in file and filename in file:
-            images.append(file)
 
-    # Dictionary to mark reference and rate scans
-    ALL_SCANS = {}
+    print(ALL_FILES)
+
+    # List for all scantypes (NOT the file names)
+    ORDERED_SCANS = []
+
+    if 'AP' in filename:
+        # TODO: AP code chunk
+
+        for scan in AP_scans:
+            for file in ALL_FILES:
+                if 'AP' in file and scan in file:
+                    ORDERED_SCANS.append(file)
+    else:
+        # TODO: PA code chunk
+
+        for scan in PA_scans:
+            for file in ALL_FILES:
+                if 'AP' in file and scan in file:
+                    ORDERED_SCANS.append(file)
     
-    # check for irr scans
-    try:
-        subj_irr = IRR_DICT[subject]
-    except:
-        subj_irr = [None]
+    # BUG: WILL ONLY DISPLAY ONE SCAN NOW...
 
+    # LIST FOR ALL THE IMAGE FILES PER SUBJECT BASED ON POLARITY
+    ALL_IMAGES = []
 
-    ### TODO: functionize redundant line of code ###
-    # Ordering for scan polarities
-    AP_scans = ['REST1', 'GUESSING', 'CARIT', 'REST2']
-    PA_scans = ['REST1', 'GUESSING', 'CARIT', 'EMOTION', 'REST2'] 
-
-    # Subset AP images and PA images
-    AP_images = [i for i in ALL_FILES if 'AP' in i]
-    PA_images = [i for i in ALL_FILES if 'PA' in i]
-
-    ORDERED_FILES = []
-    for scan in AP_scans:
-        for image in AP_images:
-            if scan in image:
-                ORDERED_FILES.append(image)
-
-
-    # order PA_scans later
-    for scan in PA_scans:
-        for image in PA_images:
-            if scan in image:
-                ORDERED_FILES.append(image)
-
-    # check if scans are references or rates
-    for file in ORDERED_FILES:
-        if file in subj_irr:
-            ALL_SCANS[file] = 'Rate'
-        else:
-            ALL_SCANS[file] = 'Ref'
-
-    a_images = []
-
-    for scan in ORDERED_FILES:
+    # Appending relevant images into list
+    for scan in ORDERED_SCANS:
         for file in files:
             if subject in file and scan in file:
-                a_images.append(file)
+                ALL_IMAGES.append(file) 
 
-    # store current index 
-    curr_idx = list(ALL_SCANS.keys()).index(filename)
+    # get current index of scantype
+    curr_idx = ORDERED_SCANS.index(filename)
 
-    # Get index for next and previous scans
-    nxt_idx = (curr_idx + 1)%len(ALL_FILES)
-    prev_idx = (curr_idx - 1) %len(ALL_FILES)
+    # get index for next/previous scans
+    nxt_idx = (curr_idx+1)%len(ORDERED_SCANS)
+    prev_idx = (curr_idx-1)%len(ORDERED_SCANS)
 
-    # Get filenames to redirect to this url
-    nxt_file = list(ALL_SCANS.keys())[nxt_idx]
-    prev_file = list(ALL_SCANS.keys())[prev_idx]
-   
-    # Add scene to the database
-    scene = 0
-    if 'scene1' in filename:
-        scene = 1
-    elif 'scene2' in filename:
-        scene = 2
+    # get filenames for next/prev scans
+    nxt_file = ORDERED_SCANS[nxt_idx]
+    prev_file = ORDERED_SCANS[prev_idx]
+
+    # BUG: testing curr feature
+    curr = ORDERED_SCANS.index(filename)*2
+
+
+
+
+
+
+
+
+    # TODO: DELETE EVERYTHING BELOW ONCE CODE IS FINALIZED
 
     # TODO: Create scans dictionary (png files for subject: scantype)
     # TODO: Make toggle bar options ('All', 'Ref', 'Rate')
@@ -394,7 +376,7 @@ def scan_rater(subject, filename):
         db.session.commit()
         flash('Thanks for rating!')
         return redirect(url_for('scan_rater', subject=subject, filename=filename))
-    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=filename, scene=scene, scene_form=scene_form, images=images, nxt=nxt_file, prev=prev_file, allscans = a_images, curr=curr_idx)
+    return render_template('rate_image.html', image_ratings=scan_ratings, form=form, filename=filename, subject=subject, scan=filename, scene_form=scene_form, nxt=nxt_file, prev=prev_file, allscans = ALL_IMAGES, curr=curr)
 
 # TODO: Add this to home page or separate page
 # only accessed by adding '/download' to end of URL (will auto download a file)

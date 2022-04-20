@@ -87,18 +87,38 @@
         .distort_label {
             display: none;
         }
+        .scans {
+            position: relative;
+            display: none;
+            color: white;
+            z-index: 0;
+        }
+        .text {
+            position: absolute;
+            color: white;
+            top: 2px;
+            z-index: 1;
+        }
     </style>
     <h1>Scan Information</h1>
     <p><strong>Subject:</strong> {{ subject }}</p>
     <p><strong>Scan:</strong> {{ scan }}</p>
-    <p><strong>Scene: </strong> {{ scene_form.hidden_tag() }}
+    <p><strong>Polarity: </strong> {{ scene_form.hidden_tag() }}
                                 {{ scene_form.scene(onclick="changeSceneView()") }} (will be toggable)</p>
+
+    <!--TESTING DYNAMIC TOGGLE FEATURE-->
+    {% for scan in allscans %}
+        <div class="scans">
+            <img class="pic" src="/static/subjects/HCD_wb1.4.2.pngs/{{scan}}">
+            <div class="text">{{ scan }}</div>
+        </div>
+    {% endfor %}
 
     <p><a href="{{ url_for('scan_rater', subject=subject, filename=nxt) }}">Next image[DEMO]</a></p>
     <p><a href="{{ url_for('scan_rater', subject=subject, filename=prev) }}">Previous image[DEMO]</a></p>
-    {% for image in images %}
+    <!--{% for image in images %}
         <img src="/static/subjects/HCD_wb1.4.2.pngs/{{image}}" id="testImages">
-    {% endfor %}
+    {% endfor %} -->
     <!-- Button trigger modal -->
     <br>
     <br>
@@ -139,6 +159,51 @@
     
 <!-- Using basic js to dynamically change form. Switch to jQuery for a more succint code-->  
     <script>
+        /// TESTING TOGGLE FEATURE
+        const scans = document.querySelectorAll(".scans")
+
+        /// SHOW SCENE1 AND SCENE2 OF SCANTYPE (test)
+        let scene1 = {{ curr }};
+        let scene2 = scene1 + 1;
+
+        scans[scene1].style.display = 'block';
+        scans[scene2].style.display = 'block';
+
+        // Function to hide other scans currently not in view
+        function hideScans() {
+            scans[scene1].style.display = 'block';
+            scans[scene2].style.display = 'block';
+            for (let i = 0; i < scans.length; i++) {
+                if (!(i == scene1 || i == scene2)) {
+                    scans[i].style.display = 'none';
+                }
+            }
+        }
+
+        function scroll() {
+            if (scene1 >= 0 && scene1 < scans.length) {
+                hideScans();
+            } else if (scene1 == scans.length) {
+                scene1 = 0;
+                scene2 = 1;
+                hideScans();
+            } else {
+                scene1 = scans.length - 2;
+                scene2 = scans.length - 1;
+                hideScans();
+            }
+
+        }
+
+        // Auto slide
+        setInterval(function() {
+            scene1+=2;
+            scene2+=2;
+            scroll();
+        }, 3000);
+
+
+
         /// for opening and closing the form (testing)
         function openForm() {
             document.getElementById('scan_rater').style.display = 'block';
