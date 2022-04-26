@@ -76,11 +76,6 @@
         opacity: 1;
         }
 
-        img {
-            max-width: 75%;
-            height: auto;
-        }
-
         .distort_notes, .SBF_notes, .full_brain_notes, .CIFTI_notes, .dropout_notes {
             display: none;
         }
@@ -88,31 +83,70 @@
             display: none;
         }
         .scans {
-            position: relative;
+            text-align: center;
+            position: relative; 
             display: none;
-            color: white;
             z-index: 0;
         }
-        .text {
+        .scans img {
+            max-width: 75%;
+            height: auto;
+        }
+        img .text {
             position: absolute;
             color: white;
             top: 2px;
             z-index: 1;
         }
+        .toggle {
+            position: relative;
+        }
+        .next {
+            position: absolute;
+            background-color: #5967e7;
+            color: white;
+            border-radius: 50%;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+        .previous {
+            position: absolute;
+            background-color: #dee1fa;
+            color: black;
+            border-radius: 50%;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+        .next:hover {
+            transition: 0.4s;
+            background-color: #252c6d !important;
+        }
+        .previous:hover {
+            transition: 0.4s;
+            background-color: #838393 !important;
+
+        }
     </style>
     <h1>Scan Information</h1>
     <p><strong>Subject:</strong> {{ subject }}</p>
     <p><strong>Scan:</strong> {{ scan }}</p>
-    <p><strong>Polarity: </strong> {{ scene_form.hidden_tag() }}
-                                {{ scene_form.scene(onclick="changeSceneView()") }} (will be toggable)</p>
+    <p style="text-align:center;"><strong>Remember to make sure you're looking at the right scan before submitting your rating!</strong></p>
 
     <!--TESTING DYNAMIC TOGGLE FEATURE-->
-    {% for scan in allscans %}
-        <div class="scans">
-            <img class="pic" src="/static/subjects/HCD_wb1.4.2.pngs/{{scan}}">
-            <div class="text">{{ scan }}</div>
-        </div>
-    {% endfor %}
+    <div class="toggle">
+        <input class="previous" type="button" value="<" onclick="prevScan()"/>
+        <input class="next" type="button" value=">" onclick="nextScan()"/>
+        {% for scan in allscans %}
+            <div class="scans">
+                <img src="/static/subjects/HCD_wb1.4.2.pngs/{{scan}}">
+                <div class="text">{{ scan }}</div>
+            </div>
+        {% endfor %}
+    </div>
 
     <p><a href="{{ url_for('scan_rater', subject=subject, filename=nxt) }}">Next image[DEMO]</a></p>
     <p><a href="{{ url_for('scan_rater', subject=subject, filename=prev) }}">Previous image[DEMO]</a></p>
@@ -153,7 +187,7 @@
             {{ form.rating.label }}
             {{ form.rating() }}
             {{ form.submit() }}
-            <button type='button' class='btn cancel' onclick='closeForm()'>Close</button>
+            <button type='button' class='btn cancel' click()='closeForm()'>Close</button>
         </form>
     </div>
     
@@ -161,18 +195,24 @@
     <script>
         /// TESTING TOGGLE FEATURE
         const scans = document.querySelectorAll(".scans")
+        const nxt = document.querySelector(".next")
+        const prv = document.querySelector(".previous")
 
         /// SHOW SCENE1 AND SCENE2 OF SCANTYPE (test)
         let scene1 = {{ curr }};
         let scene2 = scene1 + 1;
 
-        scans[scene1].style.display = 'block';
-        scans[scene2].style.display = 'block';
+        scans[scene1].style.display = 'inline-block';
+        scans[scene2].style.display = 'inline-block';
+
+        /// Event listeners
+        prv.addEventListener("click", prevScan());
+        nxt.addEventListener("click", nextScan());
 
         // Function to hide other scans currently not in view
         function hideScans() {
-            scans[scene1].style.display = 'block';
-            scans[scene2].style.display = 'block';
+            scans[scene1].style.display = 'inline-block';
+            scans[scene2].style.display = 'inline-block';
             for (let i = 0; i < scans.length; i++) {
                 if (!(i == scene1 || i == scene2)) {
                     scans[i].style.display = 'none';
@@ -180,7 +220,28 @@
             }
         }
 
-        function scroll() {
+        // Show previous scan if button clicked
+
+        function prevScan() {
+            scene1-=2;
+            scene2-=2;
+            if (scene1 >= 0 && scene1 < scans.length) {
+                hideScans();
+            } else if (scene1 < 0) {
+                // we're negative!
+                scene1 = scans.length - 2;
+                scene2 = scans.length - 1;
+            } else {
+                // bug catching
+                scene1 = 0;
+                scene2 = 1;
+            }
+        }
+
+        // Show next scan if button clicked
+        function nextScan() {
+            scene1+=2;
+            scene2+=2;
             if (scene1 >= 0 && scene1 < scans.length) {
                 hideScans();
             } else if (scene1 == scans.length) {
@@ -194,14 +255,6 @@
             }
 
         }
-
-        // Auto slide
-        setInterval(function() {
-            scene1+=2;
-            scene2+=2;
-            scroll();
-        }, 3000);
-
 
 
         /// for opening and closing the form (testing)
