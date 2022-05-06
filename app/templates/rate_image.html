@@ -75,13 +75,11 @@
         .form-container .btn:hover, .open-button:hover {
         opacity: 1;
         }
+        
+        .distort_okay, .SBF_corruption, .full_brain_coverage, .CIFTI_map_typ, .dropout {
+            display: none;
+        }
 
-        .distort_notes, .SBF_notes, .full_brain_notes, .CIFTI_notes, .dropout_notes {
-            display: none;
-        }
-        .distort_label {
-            display: none;
-        }
         .scans {
             text-align: center;
             position: relative; 
@@ -166,26 +164,20 @@
     <div class='form-popup' id='scan_rater'>
         <form action="/scan_rater/{{subject}}/{{filename}}" class='form-container' method='POST'>
             {{ form.hidden_tag() }}
-            {{ form.distort_okay.label }}
-            {{ form.distort_okay() }} <br>
-            {{ form.distort_notes.label(class_='distort_label') }} 
-            {{ form.distort_notes(class_='distort_notes') }}
-            {{ form.SBF_corruption.label }}
-            {{ form.SBF_corruption() }}
-            {{ form.SBF_notes(class_='SBF_notes') }}
-            {{ form.full_brain_coverage.label }}
-            {{ form.full_brain_coverage() }}
-            {{ form.full_brain_notes(class_='full_brain_notes') }}
-            {{ form.CIFTI_map_typ.label }}
-            {{ form.CIFTI_map_typ() }}
-            {{ form.CIFTI_notes(class_='CIFTI_notes') }}
-            {{ form.dropout.label }}
-            {{ form.dropout() }}
-            {{ form.dropout_notes(class_='dropout_notes') }}
+            {{ form.rating.label }}
+            {{ form.rating(onclick='checkOption()') }}
+            {{ form.distort_okay.label(class="distort_okay") }}
+            {{ form.distort_okay(class="distort_okay") }}
+            {{ form.SBF_corruption.label(class="SBF_corruption") }}
+            {{ form.SBF_corruption(class="SBF_corruption") }}
+            {{ form.full_brain_coverage.label(class="full_brain_coverage") }}
+            {{ form.full_brain_coverage(class="full_brain_coverage") }}
+            {{ form.CIFTI_map_typ.label(class="CIFTI_map_typ") }}
+            {{ form.CIFTI_map_typ(class="CIFTI_map_typ") }}
+            {{ form.dropout.label(class="dropout") }}
+            {{ form.dropout(class="dropout") }}
             {{ form.notes.label }} <br>
             {{ form.notes() }} <br>
-            {{ form.rating.label }}
-            {{ form.rating() }}
             {{ form.submit() }}
             <button type='button' class='btn cancel' click()='closeForm()'>Close</button>
         </form>
@@ -266,64 +258,79 @@
             document.getElementById('scan_rater').style.display = 'none';
         }
 
-        /// dynamic handling of additional notes (based on what is selected in the dropdown)
-        let distort_select = document.getElementById('distort_okay');
-        let SBF_select = document.getElementById('SBF_corruption');
-        let full_brain_select = document.getElementById('full_brain_coverage');
-        let CIFTI_select = document.getElementById('CIFTI_map_typ');
-        let dropout_select = document.getElementById('dropout');
 
-        distort_select.onchange = function() {
-            distort = distort_select.value;
-            
-            if (distort == 'no') {
-                document.getElementById('distort_notes').style.display = 'block';
-                document.getElementById('distort_label').style.display = 'block';
+        /// handy dandy check for rating click
+        function checkOption() {
+            // I'm going to cheat a little here and just display the options by ID
+            // I got this by doing inspect element in the browser, and found that
+            // radiofield ids generally go by form_class-form_value.
+            // for a general approach, try the for loop I commented out below, but modify to search
+            // for the clicked radio button and then select the value...
+            if (document.getElementById('rating-1').checked == true) {
+                for(var i=0; i < document.getElementsByName('rating').length; i++) {
+                    /// NodeList returned by document call below, so for loop required
+                    document.getElementsByClassName('distort_okay')[i].style.display = 'block';
+                    document.getElementsByClassName('SBF_corruption')[i].style.display = 'block';
+                    document.getElementsByClassName('full_brain_coverage')[i].style.display = 'block';
+                    document.getElementsByClassName('CIFTI_map_typ')[i].style.display = 'block';
+                    document.getElementsByClassName('dropout')[i].style.display = 'block';
+
+                }
+                /// Make selections required
+                document.getElementsByClassName('distort_okay')[1].required = true;
+                document.getElementsByClassName('SBF_corruption')[1].required = true;
+                document.getElementsByClassName('full_brain_coverage')[1].required = true;
+                document.getElementsByClassName('CIFTI_map_typ')[1].required = true;
+                document.getElementsByClassName('dropout')[1].required = true;
             } else {
-                document.getElementById('distort_notes').style.display = 'none';
+                /// Hide selections and remove required attribute
+                for(var i=0; i < document.getElementsByName('rating').length; i++) { 
+                    document.getElementsByClassName('distort_okay')[i].style.display = 'none';
+                    document.getElementsByClassName('SBF_corruption')[i].style.display = 'none';
+                    document.getElementsByClassName('full_brain_coverage')[i].style.display = 'none';
+                    document.getElementsByClassName('CIFTI_map_typ')[i].style.display = 'none';
+                    document.getElementsByClassName('dropout')[i].style.display = 'none';
+
+                    document.getElementsByClassName('distort_okay')[1].required = false;
+                    document.getElementsByClassName('SBF_corruption')[1].required = false;
+                    document.getElementsByClassName('full_brain_coverage')[1].required = false;
+                    document.getElementsByClassName('CIFTI_map_typ')[1].required = false;
+                    document.getElementsByClassName('dropout')[1].required = false;
+
+                }
             }
         }
 
-        SBF_select.onchange = function() {
-            SBF = SBF_select.value;
 
-            if (SBF == 'yes') {
-                document.getElementById('SBF_notes').style.display = 'block';
-            } else {
-                document.getElementById('SBF_notes').style.display = 'none';
+        /// dynamic handling of options (querySelectorAll more conventional than getElementsByName)
+        const user_ratings = document.getElementsByName('rating'); 
+
+        /// check for clicks
+        user_rating.forEach(radio => {
+            radio.addEventListener('click', checkOption);
+        });
+
+        /// buggy code block. can utilize this if you have a radiofield with more options and need it to be dynamic
+        /*
+        for(var i = 0; i < user_rating.length; i++) {
+            user_rating[i].onclick = function() {
+                var rating = this.value;
+                if (user_rating == 1) {
+                document.getElementsByClassName('distort_okay').style.display = 'block';
+                document.getElementsByClassName('SBF_curruption').style.display = 'block';
+                document.getElementsByClassName('full_brain_coverage').style.display = 'block';
+                document.getElementsByClassName('CIFTI_map_typ').style.display = 'block';
+                document.getElementsByClassName('dropout').style.display = 'block';
+                } else {
+                    document.getElementsByClassName('distort_okay').style.display = 'none';
+                    document.getElementsByClassName('SBF_curruption').style.display = 'none';
+                    document.getElementsByClassName('full_brain_coverage').style.display = 'none';
+                    document.getElementsByClassName('CIFTI_map_typ').style.display = 'none';
+                    document.getElementsByClassName('dropout').style.display = 'none';
+                }
             }
-        }
-
-        full_brain_select.onchange = function() {
-            full_brain = full_brain_select.value;
-
-            if(full_brain == 'no') {
-                document.getElementById('full_brain_notes').style.display = 'block';
-            } else {
-                document.getElementById('full_brain_notes').style.display = 'none';
-            }
-        }
-
-        CIFTI_select.onchange = function() {
-            CIFTI = CIFTI_select.value;
-
-            if(CIFTI == 'no') {
-                document.getElementById('CIFTI_notes').style.display = 'block';
-            } else {
-                document.getElementById('CIFTI_notes').style.display = 'none';
-            }
-        }
-
-        /// this var 'dropout' is the value from the 'dropout' field in the form. Only for JS
-        dropout_select.onchange = function() {
-            dropout = dropout_select.value;
-
-            if(dropout == 'yes') {
-                document.getElementById('dropout_notes').style.display = 'block';
-            } else {
-                document.getElementById('dropout_notes').style.display = 'none';
-            }
-        }
+        }  
+        */
 
 
     </script>
