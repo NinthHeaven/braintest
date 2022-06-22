@@ -49,7 +49,7 @@
     <p>{{ count }} scans have been rated {{ rating }}</p>
   {% endfor %}
   <br>
-  <p>Click <a href="/logout">here</a> to logout.</p>
+  <p><a href="/download">Download the data</a></p>
   {% for message in get_flashed_messages() %}
     {{ message }}
   {% endfor %}
@@ -66,5 +66,5 @@
     {% endif %}
   {% endfor %}
   <hr>
-  <p><strong>Current Version:</strong> Alpha v6</p>
+  <p><strong>Current Version:</strong> 0.8</p>
 {% endblock %}
